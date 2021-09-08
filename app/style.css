@@ -1,0 +1,102 @@
+@font-face {
+	font-family: "UrbanistBold";
+	src: url("./Metropolis-ExtraBold.otf") format("woff")
+}
+
+@font-face {
+	font-family: "Urbanist";
+	src: url("./Metropolis-SemiBold.otf") format("woff")
+}
+
+@font-face {
+	font-family: "UrbanistMed";
+	src: url("./Metropolis-Medium.otf") format("woff")
+}
+
+h1, p {
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+body {
+	color: #fff;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100vh;
+	background: #000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	font-family: 'Urbanist', sans-serif;
+	text-align: center;
+}
+
+h1 {
+	font-size: 25px;
+	font-family: 'UrbanistBold', sans-serif;
+}
+
+p {
+	font-family: 'Urbanist', sans-serif;
+	font-size: 12px;
+}
+
+#container {
+	width: 90%;
+}
+
+input {
+	font-weight: 600;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 5px 10px;
+	color: #000;
+	height: 30px;
+	border: 0;
+	margin-bottom: 5px;
+	background-color: #fff;
+}
+
+::placeholder {
+	color: #000;
+}
+
+*:focus {
+    outline: none;
+}
+
+.divider{
+    width:20px;
+    height:auto;
+    display:inline-block;
+}
+
+button {
+	font-family: 'Urbanist', sans-serif;
+	background-color: #000;
+	color: #fff;
+	width: 100%;
+	border: solid 2px #fff;
+	margin: 0;
+	padding: 8px 16px;
+	transition: 0.2s;
+}
+
+button:enabled:hover {
+	background-color: #fff;
+	color: #000;
+	transition: 0.2s;
+}
+
+button:enabled {
+	cursor: pointer;	
+}
+
+button:disabled {
+	background-color: rgb(206, 206, 206);
+	color: rgb(53, 53, 53);
+	border: solid 2px rgb(206, 206, 206);
+}

@@ -3,27 +3,33 @@ const { ipcRenderer } = require('electron')
 document.getElementById("start-btn").addEventListener("click", start);
 document.getElementById("stop-btn").addEventListener("click", stop);
 
-$('#state').html("Stopped".fontcolor("red"))
-
 ipcRenderer.on("data", (event, data) => {
 	document.getElementById('username').value = data.username
 	document.getElementById('password').value = data.password
 })
 
 ipcRenderer.on("starting", (event, data) => {
-	$('#state').html("Starting...".fontcolor("green"))
+	document.getElementById("state").innerHTML = "Starting..."
+	document.getElementById("start-btn").disabled = true
+	document.getElementById("stop-btn").disabled = true
 })
 
 ipcRenderer.on("started", (event, data) => {
-	$('#state').html("Started".fontcolor("green"))
+	document.getElementById("state").innerHTML = "Started"
+	document.getElementById("start-btn").disabled = true
+	document.getElementById("stop-btn").disabled = false
 })
 
 ipcRenderer.on("stopped", (event, data) => {
-	$('#state').html("Stopped".fontcolor("red"))
+	document.getElementById("state").innerHTML = "Stopped"
+	document.getElementById("start-btn").disabled = false
+	document.getElementById("stop-btn").disabled = true
 })
 
 ipcRenderer.on("stopping", (event, data) => {
-	$('#state').html("Stopping...".fontcolor("red"))
+	document.getElementById("start-btn").disabled = true
+	document.getElementById("stop-btn").disabled = true
+	document.getElementById("state").innerHTML = "Stopping..."
 })
 
 function start()
