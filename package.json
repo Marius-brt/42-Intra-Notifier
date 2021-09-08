@@ -1,0 +1,24 @@
+{
+  "name": "intrascrapper",
+  "version": "1.0.0",
+  "description": "Intra Notifier dont fucking forget ur evaluation",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^14.0.0",
+    "electron-builder": "^22.10.5"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "chrome-paths": "^1.0.1",
+    "electron-store": "^8.0.0",
+    "jquery": "^3.6.0",
+    "node-notifier": "^10.0.0",
+    "puppeteer": "^10.2.0",
+    "puppeteer-electron": "0.0.10"
+  }
+}
