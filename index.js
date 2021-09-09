@@ -111,6 +111,7 @@ async function checkNotif() {
 			time: Date.parse($(el).find("span[data-long-date]").attr("data-long-date")),
 			first_notif: false,
 			last_notif: false,
+			new_notif: false,
 			username: $(el).find("a[data-user-link]").attr("data-user-link"),
 			url: $(el).find("a[data-user-link]").attr("href"),
 			place: ''
@@ -122,36 +123,34 @@ async function checkNotif() {
 			var date = new Date(el.time)
 			const today = new Date();
 			const minutes = parseInt(Math.abs(date.getTime() - today.getTime()) / (1000 * 60) % 60);
-			if(minutes <= 15) {
+			evaluations[el.id] = el
+			if(!evaluations[el.id].first_notif && minutes <= 15) {
+				if(el.text.startsWith("You will evaluate")) {
+					await page.goto(el.url)
+					const placeHtml = await page.evaluate(() => document.body.innerHTML)
+					const p = cheerio.load(placeHtml)
+					el.place = p('.user-poste-infos').text().split('.', 1)[0]
+					url = 'user'
+				}
 				evaluations[el.id] = el
+				evaluations[el.id].first_notif = true
+				if(el.text.startsWith("You will evaluate")) {
+					notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
+				} else {
+					notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
+				}
 			}
-			if(evaluations[el.id]) {
-				if(!evaluations[el.id].first_notif && minutes <= 15) {
-					if(el.text.startsWith("You will evaluate")) {
-						await page.goto(el.url)
-						const placeHtml = await page.evaluate(() => document.body.innerHTML)
-						const p = cheerio.load(placeHtml)
-						el.place = p('.user-poste-infos').text().split('.', 1)[0]
-						url = 'user'
-					}
-					evaluations[el.id] = el
-					evaluations[el.id].first_notif = true
-					if(el.text.startsWith("You will evaluate")) {
-						notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
-					} else {
-						notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
-					}
+			if(!evaluations[el.id].last_notif && minutes <= 4) {
+				evaluations[el.id] = el
+				evaluations[el.id].last_notif = true
+				if(el.text.startsWith("You will evaluate")) {
+					notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
+				} else {
+					notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
 				}
-				if(!evaluations[el.id].last_notif && minutes <= 4) {
-					evaluations[el.id] = el
-					evaluations[el.id].last_notif = true
-					if(el.text.startsWith("You will evaluate")) {
-						notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
-					} else {
-						notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
-					}
-				}
-			} else {
+			}
+			if(!evaluations[el.id].new_notif) {
+				evaluations[el.id].new_notif = true;
 				if(el.text.startsWith("You will evaluate")) {
 					notif("Intra Notifier: New evaluation !", `You will evaluate someone in ${diffDate(date)}`, false)
 				} else {
