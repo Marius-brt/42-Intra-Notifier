@@ -60,7 +60,7 @@ ipcMain.on("start", async (event, args) => {
 				{
 					notif('Intra Notifier', "Notifier started !", true)
 					checkNotif()
-					interval = setInterval(checkNotif, 60000)
+					interval = setInterval(checkNotif, 30000)
 					win.webContents.send("started")
 				}
 				else
@@ -122,10 +122,11 @@ async function checkNotif() {
 			const now = new Date()
 			if (date - now > 0) {
 				const time = getDiff(date)
-				if(!evaluations[el.id]) {
+				if(evaluations[el.id] == undefined) {
 					evaluations[el.id] = el
 				}
-				if(!evaluations[el.id].first_notif && time.minutes > 4 && time.minutes <= 14  && time.hours == 0) {
+				/*15mins before*/
+				if(evaluations[el.id].first_notif == false && time.minutes > 4 && time.minutes <= 14  && time.hours == 0) {
 					evaluations[el.id].new_notif = true;
 					if(el.text.startsWith("You will evaluate")) {
 						await page.goto(el.url)
@@ -137,12 +138,13 @@ async function checkNotif() {
 					evaluations[el.id] = el
 					evaluations[el.id].first_notif = true
 					if(el.text.startsWith("You will evaluate")) {
-						notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
+						notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(evaluations[el.id].place))
 					} else {
 						notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
 					}
 				}
-				if(!evaluations[el.id].last_notif && time.minutes <= 4 && time.hours == 0) {
+				/*4mins before*/
+				if(evaluations[el.id].last_notif == false && time.minutes <= 4 && time.hours == 0) {
 					if(el.text.startsWith("You will evaluate") && evaluations[el.id].place == '') {
 						await page.goto(el.url)
 						const placeHtml = await page.evaluate(() => document.body.innerHTML)
@@ -150,15 +152,17 @@ async function checkNotif() {
 						el.place = p('.user-poste-infos').text().split('.', 1)[0]
 						url = 'user'
 					}
+					evaluations[el.id].first_notif = true
 					evaluations[el.id].last_notif = true
 					evaluations[el.id].new_notif = true;
 					if(el.text.startsWith("You will evaluate")) {
-						notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
+						notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(evaluations[el.id].place))
 					} else {
 						notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
 					}
 				}
-				if(!evaluations[el.id].new_notif && (time.minutes > 14 && time.hours == 0) || (time.hours >= 0)) {
+				/*New eval*/
+				if(evaluations[el.id].new_notif == false && ((time.minutes > 14 && time.hours == 0) || (time.hours >= 0))) {
 					evaluations[el.id].new_notif = true;
 					if(el.text.startsWith("You will evaluate")) {
 						notif("Intra Notifier: New evaluation !", `You will evaluate someone in ${diffDate(date)}`, false)

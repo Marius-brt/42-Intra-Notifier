@@ -1,6 +1,6 @@
 {
   "name": "intrascrapper",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Intra Notifier dont fucking forget ur evaluation",
   "main": "index.js",
   "scripts": {
