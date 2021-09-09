@@ -6,13 +6,19 @@
 
 # 42 Intra Notifier
 
-42 Intra Notifier is a small scrapping software that allows you to be notified when you have a new assessment and also to have a reminder 3 minutes before it.
+42 Intra Notifier is a small scrapping software that allows you to be notified when you have a new assessment and also to have a reminder 15 minutes and 4 minutes before it.
 
 ## How to install ?
 
-Go to [release](https://github.com/Marius-brt/42-Intra-Notifier/releases) and choose the latest version corresponding to the OS of your machine (I guess MacOS ?).
+Go to [release](https://github.com/Marius-brt/42-Intra-Notifier/releases) and choose the latest version corresponding to the OS of your machine (I guess MacOS ?) and click on NAME_OF_VERSION.zip.
 
 > **Google Chrome need to be installed** : If not, install it from the software on your Mac called "*Managed Software Center*".
+
+## How to use it ?
+
+![Screen](https://raw.githubusercontent.com/Marius-brt/42-Intra-Notifier/main/app_picture.png)
+
+You have to unzip the file then open Intra Notifier (in your download folder normally). Enter your Intra username and password then click on Start. You can minimize the application but do not click on the red cross. When you want to stop receiving notifications, just click on Stop.
 
 ## How it's working ?
 
