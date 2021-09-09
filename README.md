@@ -18,7 +18,7 @@ Go to [release](https://github.com/Marius-brt/42-Intra-Notifier/releases) and ch
 
 <img src="https://raw.githubusercontent.com/Marius-brt/42-Intra-Notifier/main/app_picture.png"
 		alt="Screen"
-		style="height: 400px;/>
+		style="height: 400px;"/>
 
 You have to unzip the file then open Intra Notifier (in your download folder normally). Enter your Intra username and password then click on Start. You can minimize the application but do not click on the red cross. When you want to stop receiving notifications, just click on Stop.
 
