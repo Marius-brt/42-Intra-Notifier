@@ -178,6 +178,7 @@ async function checkNotif() {
 }
 
 function diffDate(endDate) {
+	const today = new Date()
 	const time = getDiff(endDate)
 	if(endDate - today < 0)
 	{
