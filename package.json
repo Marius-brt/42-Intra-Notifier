@@ -1,0 +1,35 @@
+{
+  "name": "intrascrapper",
+  "version": "1.2.1",
+  "description": "Intra Notifier dont fucking forget ur evaluation",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "author": "mbrouty",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^14.0.0",
+    "electron-builder": "^22.10.5"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "chrome-paths": "^1.0.1",
+    "electron-store": "^8.0.0",
+    "glasstron": "^0.1.0",
+    "puppeteer-core": "^10.2.0"
+  },
+  "build": {
+    "appId": "mbrouty.intra.notifier",
+    "productName": "Intra Notifier",
+    "mac": {
+      "category": "intra.notifier.tool",
+      "icon": "logo.png"
+    },
+    "win": {
+      "icon": "logo_win.png"
+    }
+  }
+}
