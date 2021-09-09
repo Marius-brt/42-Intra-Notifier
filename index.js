@@ -125,7 +125,7 @@ async function checkNotif() {
 				if(!evaluations[el.id]) {
 					evaluations[el.id] = el
 				}
-				if(!evaluations[el.id].first_notif && time.minutes > 4 && time.minutes <= 15) {
+				if(!evaluations[el.id].first_notif && time.minutes > 4 && time.minutes <= 14) {
 					evaluations[el.id].new_notif = true;
 					if(el.text.startsWith("You will evaluate")) {
 						await page.goto(el.url)
@@ -158,7 +158,7 @@ async function checkNotif() {
 						notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
 					}
 				}
-				if(!evaluations[el.id].new_notif && time.minutes > 15) {
+				if(!evaluations[el.id].new_notif && time.minutes > 14) {
 					evaluations[el.id].new_notif = true;
 					if(el.text.startsWith("You will evaluate")) {
 						notif("Intra Notifier: New evaluation !", `You will evaluate someone in ${diffDate(date)}`, false)
