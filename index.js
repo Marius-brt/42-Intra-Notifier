@@ -61,8 +61,8 @@ ipcMain.on("start", async (event, args) => {
 				if (page.url() == "https://profile.intra.42.fr/")
 				{
 					notif('Intra Notifier', "Notifier started !", true)
-					check()
-					interval = setInterval(check, 10000)
+					checkNotif()
+					interval = setInterval(checkNotif, 60000)
 					win.webContents.send("started")
 				}
 				else
@@ -100,43 +100,67 @@ ipcMain.on("stop", async (event, args) => {
 	}
 })
 
-async function check()
-{
+async function checkNotif() {
 	await page.reload({ waitUntil: ["networkidle0", "domcontentloaded"] });
 	let bodyHTML = await page.evaluate(() => document.body.innerHTML);
-	const $ = cheerio.load(bodyHTML);
+	const $ = cheerio.load(bodyHTML)
 	var data = $('.project-item.reminder').map((i, el) => {
 		return {
 			id: $(el).attr("data-scale-team"),
 			text: $(el).find('.project-item-text').text().replace(/[^\x20-\x7E]/g, ''),
 			time: Date.parse($(el).find("span[data-long-date]").attr("data-long-date")),
-			notified: false
+			first_notif: false,
+			last_notif: false,
+			username: $(el).find("a[data-user-link]").attr("data-user-link"),
+			url: $(el).find("a[data-user-link]").attr("href"),
+			place: ''
 		}
 	}).get()
-	data.forEach(el => {
-		var date = new Date(el.time)
-		if(evaluations[el.id]) {
-			if(!evaluations[el.id].notified) {
-				const today = new Date();
-				const minutes = parseInt(Math.abs(date.getTime() - today.getTime()) / (1000 * 60) % 60);
-				if(minutes <= 3) {
+	data.forEach(async (el, index) => {
+		var url = 'profile'
+		await setTimeout(async () => {
+			var date = new Date(el.time)
+			const today = new Date();
+			const minutes = parseInt(Math.abs(date.getTime() - today.getTime()) / (1000 * 60) % 60);
+			if(minutes <= 15) {
+				evaluations[el.id] = el
+			}
+			if(evaluations[el.id]) {
+				if(!evaluations[el.id].first_notif && minutes <= 15) {
+					await page.goto(el.url)
+					const placeHtml = await page.evaluate(() => document.body.innerHTML)
+					const p = cheerio.load(placeHtml)
+					el.place = p('.user-poste-infos').text().split('.', 1)[0]
+					url = 'user'
+					evaluations[el.id] = el
+					evaluations[el.id].first_notif = true
 					if(el.text.startsWith("You will evaluate")) {
-						notif('Intra Notifier: Remember !', `You will evaluate someone in ${diffDate(date)}`, false)
+						notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
 					} else {
-						notif('Intra Notifier: Remember !', `You will be evaluated in ${diffDate(date)}`, false)
+						notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
 					}
-					evaluations[el.id].notified = true
+				}
+				if(!evaluations[el.id].last_notif && minutes <= 4) {
+					evaluations[el.id] = el
+					evaluations[el.id].last_notif = true
+					if(el.text.startsWith("You will evaluate")) {
+						notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
+					} else {
+						notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
+					}
+				}
+			} else {
+				if(el.text.startsWith("You will evaluate")) {
+					notif("Intra Notifier: New evaluation !", `You will evaluate someone in ${diffDate(date)}`, false)
+				} else {
+					notif("Intra Notifier: New evaluation !", `You will be evaluated in ${diffDate(date)}`, false)
 				}
 			}
-		} else {
-			if(el.text.startsWith("You will evaluate")) {
-				notif('Intra Notifier: New evaluation !', `You will evaluate someone in ${diffDate(date)}`, true)
-			} else {
-				notif('Intra Notifier: New evaluation !', `You will be evaluated in ${diffDate(date)}`, true)
-			}
-			evaluations[el.id] = el
+		}, 5000 * index)
+		if(url != 'profile') {
+			await page.goto("https://profile.intra.42.fr/")
 		}
-	})
+	})	
 }
 
 function diffDate(endDate) {
@@ -146,10 +170,11 @@ function diffDate(endDate) {
 	return `${hours > 0 ? hours + " hours " : ""}${minutes > 0 ? minutes + " mins " : ""}`
 }
 
-function notif(title, description, timeout = true) {
+function notif(title, description, timeout = true, body = '') {
 	const options = {
 		title: title,
 		subtitle: description,
+		body,
 		silent: true,
 		icon: path.join(__dirname, 'logo.png'),
 		timeoutType: timeout ? 'default' : 'never'
