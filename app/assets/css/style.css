@@ -1,11 +1,104 @@
+@font-face {
+	font-family: "Metropolis";
+	src: url("./assets/fonts/Metropolis-Medium.otf") format("opentype");
+}
+
+@font-face {
+	font-family: "MetropolisBold";
+	src: url("./assets/fonts/Metropolis-Bold.otf") format("opentype");
+}
+
+@font-face {
+	font-family: "MetropolisExtraBold";
+	src: url("./assets/fonts/Metropolis-ExtraBold.otf") format("opentype");
+}
+
 @media (prefers-color-scheme: dark) {
 	:root {
-		background: rgba(0, 0, 0, 0.75);
+		background: #040809e5;
+		color: #fff;
+	}
+	input {
+		border: solid 1.5px #222525;
 	}
 }
   
 @media (prefers-color-scheme: light) {
 	:root {
-		background: rgba(255, 255, 255, 0.75);
+		background: rgba(255, 255, 255, 0.8);
+		color: #000;
 	}
+	input {
+		border: solid 2px rgb(56, 56, 56);
+	}
+}
+
+body {
+	font-family: 'Metropolis', sans-serif;
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+}
+
+.drag {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 40px;
+	width: 100%;
+}
+
+.drag-area {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 40px;
+	padding: 0 15px;
+	user-select: none;
+  	-webkit-app-region: drag;
+}
+
+.drag p {
+	font-family: 'MetropolisExtraBold', sans-serif;
+	font-weight: 800;
+	font-size: 12px;
+}
+
+.container {
+	width: 100%;
+	height: 100%;
+}
+
+.center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+#login .form {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.form h3 {
+	color: #79797b;
+	font-family: 'Metropolis', sans-serif;
+}
+
+input {
+	font-size: 15px;
+	padding: 5px 10px;
+	border-radius: 5px;
+	background: transparent;
+	margin-bottom: 10px;
+	font-weight: 500;
+}
+
+input:focus {
+	outline: none;
 }
