@@ -8,7 +8,7 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
-  "author": "",
+  "author": "mbrouty",
   "license": "ISC",
   "devDependencies": {
     "electron": "^14.0.0",

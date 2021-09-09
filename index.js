@@ -4,16 +4,13 @@ const Store = require('electron-store')
 const cheerio = require('cheerio')
 const chromePaths = require('chrome-paths')
 const path = require('path')
-
 const store = new Store()
 
 var browser
 var win
 var page
 var interval = null
-
 var evaluations = {}
-
 
 app.whenReady().then(() => {
 	createWindow()
