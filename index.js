@@ -123,7 +123,9 @@ async function checkNotif() {
 			var date = new Date(el.time)
 			const today = new Date();
 			const minutes = parseInt(Math.abs(date.getTime() - today.getTime()) / (1000 * 60) % 60);
-			evaluations[el.id] = el
+			if(!evaluations[el.id]) {
+				evaluations[el.id] = el
+			}
 			if(!evaluations[el.id].first_notif && minutes <= 15) {
 				if(el.text.startsWith("You will evaluate")) {
 					await page.goto(el.url)
@@ -177,7 +179,6 @@ function notif(title, description, timeout = true, body = '') {
 		subtitle: description,
 		body,
 		silent: true,
-		icon: path.join(__dirname, 'logo.png'),
 		timeoutType: timeout ? 'default' : 'never'
 	}
 	new Notification(options).show()
