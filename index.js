@@ -14,6 +14,7 @@ var interval = null
 
 var evaluations = {}
 
+
 app.whenReady().then(() => {
 	createWindow()
 })
@@ -121,42 +122,52 @@ async function checkNotif() {
 		var url = 'profile'
 		await setTimeout(async () => {
 			var date = new Date(el.time)
-			const today = new Date();
-			const minutes = parseInt(Math.abs(date.getTime() - today.getTime()) / (1000 * 60) % 60);
-			if(!evaluations[el.id]) {
-				evaluations[el.id] = el
-			}
-			if(!evaluations[el.id].first_notif && minutes <= 15) {
-				if(el.text.startsWith("You will evaluate")) {
-					await page.goto(el.url)
-					const placeHtml = await page.evaluate(() => document.body.innerHTML)
-					const p = cheerio.load(placeHtml)
-					el.place = p('.user-poste-infos').text().split('.', 1)[0]
-					url = 'user'
+			const now = new Date()
+			if (date - now > 0) {
+				const time = getDiff(date)
+				if(!evaluations[el.id]) {
+					evaluations[el.id] = el
 				}
-				evaluations[el.id] = el
-				evaluations[el.id].first_notif = true
-				if(el.text.startsWith("You will evaluate")) {
-					notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
-				} else {
-					notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
+				if(!evaluations[el.id].first_notif && time.minutes > 4 && time.minutes <= 15) {
+					evaluations[el.id].new_notif = true;
+					if(el.text.startsWith("You will evaluate")) {
+						await page.goto(el.url)
+						const placeHtml = await page.evaluate(() => document.body.innerHTML)
+						const p = cheerio.load(placeHtml)
+						el.place = p('.user-poste-infos').text().split('.', 1)[0]
+						url = 'user'
+					}
+					evaluations[el.id] = el
+					evaluations[el.id].first_notif = true
+					if(el.text.startsWith("You will evaluate")) {
+						notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
+					} else {
+						notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
+					}
 				}
-			}
-			if(!evaluations[el.id].last_notif && minutes <= 4) {
-				evaluations[el.id] = el
-				evaluations[el.id].last_notif = true
-				if(el.text.startsWith("You will evaluate")) {
-					notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
-				} else {
-					notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
+				if(!evaluations[el.id].last_notif && time.minutes <= 4) {
+					if(el.text.startsWith("You will evaluate") && evaluations[el.id].place == '') {
+						await page.goto(el.url)
+						const placeHtml = await page.evaluate(() => document.body.innerHTML)
+						const p = cheerio.load(placeHtml)
+						el.place = p('.user-poste-infos').text().split('.', 1)[0]
+						url = 'user'
+					}
+					evaluations[el.id].last_notif = true
+					evaluations[el.id].new_notif = true;
+					if(el.text.startsWith("You will evaluate")) {
+						notif('Intra Notifier: Remember !', `You will evaluate ${el.username} in ${diffDate(date)}`, false, parsePlace(el.place))
+					} else {
+						notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
+					}
 				}
-			}
-			if(!evaluations[el.id].new_notif) {
-				evaluations[el.id].new_notif = true;
-				if(el.text.startsWith("You will evaluate")) {
-					notif("Intra Notifier: New evaluation !", `You will evaluate someone in ${diffDate(date)}`, false)
-				} else {
-					notif("Intra Notifier: New evaluation !", `You will be evaluated in ${diffDate(date)}`, false)
+				if(!evaluations[el.id].new_notif && time.minutes > 15) {
+					evaluations[el.id].new_notif = true;
+					if(el.text.startsWith("You will evaluate")) {
+						notif("Intra Notifier: New evaluation !", `You will evaluate someone in ${diffDate(date)}`, false)
+					} else {
+						notif("Intra Notifier: New evaluation !", `You will be evaluated in ${diffDate(date)}`, false)
+					}
 				}
 			}
 		}, 5000 * index)
@@ -167,10 +178,33 @@ async function checkNotif() {
 }
 
 function diffDate(endDate) {
-	const today = new Date();
-	const hours = parseInt(Math.abs(endDate - today) / (1000 * 60 * 60) % 24);
-	const minutes = parseInt(Math.abs(endDate.getTime() - today.getTime()) / (1000 * 60) % 60);
-	return `${hours > 0 ? hours + " hours " : ""}${minutes > 0 ? minutes + " mins " : ""}`
+	const time = getDiff(endDate)
+	if(endDate - today < 0)
+	{
+		return `few seconds`
+	} else {
+		if(time.hours > 0 || time.minutes > 0) {
+			return `${time.hours > 0 ? time.hours + " hours " : ""}${time.minutes > 0 ? time.minutes + " mins " : ""}`
+		} else {
+			return `${time.seconds} secs`
+		}
+	}
+}
+
+function getDiff(endDate) {
+	const today = new Date()
+	var seconds = Math.floor((endDate - today)/1000)
+	var minutes = Math.floor(seconds/60)
+	var hours = Math.floor(minutes/60)
+	var days = Math.floor(hours/24)
+	hours = hours-(days*24)
+	minutes = minutes-(days*24*60)-(hours*60)
+	seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60)
+	return {
+		seconds,
+		minutes,
+		hours
+	}
 }
 
 function notif(title, description, timeout = true, body = '') {
