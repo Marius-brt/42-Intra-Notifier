@@ -20,14 +20,17 @@ function createWindow () {
 	win = new BrowserWindow({
 		width: 250,
 		height: 340,
+		frame: false,
 		autoHideMenuBar: true,
 		fullscreenable: false,
 		maximizable: false,
+		vibrancy: 'ultra-dark',
 		icon: path.join(__dirname, 'logo.png'),
 		webPreferences: {
 			nativeWindowOpen: false,
 			nodeIntegration: true,
-			contextIsolation: false
+			contextIsolation: false,
+			experimentalFeatures: true
 		}
 	})
 
@@ -142,9 +145,7 @@ async function checkNotif() {
 					} else {
 						notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
 					}
-				}
-				/*4mins before*/
-				if(evaluations[el.id].last_notif == false && time.minutes <= 4 && time.hours == 0) {
+				} else if(evaluations[el.id].last_notif == false && time.minutes <= 4 && time.hours == 0) {
 					if(el.text.startsWith("You will evaluate") && evaluations[el.id].place == '') {
 						await page.goto(el.url)
 						const placeHtml = await page.evaluate(() => document.body.innerHTML)
@@ -160,9 +161,7 @@ async function checkNotif() {
 					} else {
 						notif('Intra Notifier: Remember !', `You will be evaluated by ${el.username} in ${diffDate(date)}`, false)
 					}
-				}
-				/*New eval*/
-				if(evaluations[el.id].new_notif == false && ((time.minutes > 14 && time.hours == 0) || (time.hours >= 0))) {
+				} else if(evaluations[el.id].new_notif == false && ((time.minutes > 14 && time.hours == 0) || (time.hours >= 0))) {
 					evaluations[el.id].new_notif = true;
 					if(el.text.startsWith("You will evaluate")) {
 						notif("Intra Notifier: New evaluation !", `You will evaluate someone in ${diffDate(date)}`, false)
