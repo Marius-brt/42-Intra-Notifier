@@ -1,25 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Intra Notifier</title>
-		<link rel="stylesheet" href="assets/css/style.css">
-	</head>
-	<body>
-		<div class="drag">
-			<div class="drag-area" draggable="true">
-				
-			</div>
-		</div>
-		<div class="container center" id="login">
-			<div class="form">
-				<input type="text" id="username" placeholder="Username">
-				<input type="password" id="password" placeholder="Password">
-				<button>Login</button>
-			</div>
-		</div>
-		<script src="assets/js/app.js"></script>
-	</body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intra Notifier</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <div class="drag">
+        <div class="drag-area" draggable="true"></div>
+    </div>
+    <div class="container center" id="login" style="display: none;">
+        <div class="form">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button>Login</button>
+        </div>
+    </div>
+    <div class="timeline">
+        <ul id="timeline">
+
+        </ul>
+    </div>
+    <script src="assets/js/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
 </html>

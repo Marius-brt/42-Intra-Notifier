@@ -46,8 +46,9 @@ function spawnWindow(){
 			win.webContents.send("try_login")
 			if(await getCookies()) {
 				win.webContents.send("user_data", await getUserData())
+			} else {
+				win.webContents.send("failed_login")
 			}
-
 		}
 	})
 }
