@@ -1,4 +1,4 @@
-const electron = require('electron')
+const { app, BrowserWindow, ipcMain, Notification } = require('electron')
 const puppeteer = require('puppeteer-core')
 const chrome = require('chrome-paths')
 const axios = require('axios')
@@ -7,8 +7,8 @@ const cheerio = require('cheerio')
 const crypto = require('./src/crypto')
 const store = new Store()
 
-electron.app.commandLine.appendSwitch("enable-transparent-visuals")
-electron.app.on('ready', () => {
+app.commandLine.appendSwitch("enable-transparent-visuals")
+app.on('ready', () => {
 	setTimeout(
 		spawnWindow,
 		process.platform == "linux" ? 1000 : 0
@@ -17,9 +17,10 @@ electron.app.on('ready', () => {
 
 var cookies = null
 var cookieString = ''
+var evaluations = {}
 
 function spawnWindow(){
-	win = new electron.BrowserWindow({
+	win = new BrowserWindow({
 		width: 800,
 		height: 600,
 		autoHideMenuBar: true,
@@ -63,7 +64,69 @@ async function getUserData() {
 			level: parseInt($(el).find(".on-progress").text().replace(/[^0-9]/g, '').split('')[0])
 		}
 	}).get()
-	return data[0]
+	/*var evals = $('.project-item.reminder').map((i, el) => {
+		return {
+			id: $(el).attr("data-scale-team"),
+			text: $(el).find('.project-item-text').text().replace(/[^\x20-\x7E]/g, ''),
+			time: Date.parse($(el).find("span[data-long-date]").attr("data-long-date")),
+			first_notif: false,
+			last_notif: false,
+			new_notif: false,
+			username: $(el).find("a[data-user-link]").attr("data-user-link"),
+			url: $(el).find("a[data-user-link]").attr("href"),
+			place: '',
+			image: ''
+		}
+	}).get()*/
+	var evals = [
+        {
+            "id": "3528107",
+            "text": "You will be evaluated by bsouleau on C Piscine C 06",
+            "time": 1631280303353,
+            "first_notif": false,
+            "last_notif": false,
+            "new_notif": false,
+            "username": "bsouleau",
+            "url": "https://profile.intra.42.fr/users/bsouleau",
+            "place": "",
+			"image": ''
+        },
+        {
+            "id": "3528108",
+            "text": "You will be evaluated on C Piscine C 07",
+            "time": 1631277605870,
+            "first_notif": false,
+            "last_notif": false,
+            "new_notif": false,
+            "place": "",
+			"image": ''
+        },
+        {
+            "id": "3528109",
+            "text": "You will be evaluated on C Piscine C 07",
+            "time": 1631272500000,
+            "first_notif": false,
+            "last_notif": false,
+            "new_notif": false,
+            "place": "",
+			"image": ''
+        },
+        {
+            "id": "3528110",
+            "text": "You will be evaluated on OUI",
+            "time": 1631277605870,
+            "first_notif": false,
+            "last_notif": false,
+            "new_notif": false,
+            "place": "",
+			"image": ''
+        }
+    ]
+	await checkNotif(evals)
+	return {
+		user_data: data[0],
+		evaluations
+	}
 }
 
 async function getCookies() {
@@ -111,6 +174,119 @@ async function request(url) {
 	}
 }
 
+async function checkNotif(evals) {
+	for (const el of evals) {
+		if(evaluations[el.id] == undefined) {
+			evaluations[el.id] = el
+			if(el.url != undefined && el.username != undefined) {
+				var userHtml = await request(el.url)
+				var p = cheerio.load(userHtml)
+				evaluations[el.id].place = parseString(p('.user-poste-infos').text().split('.', 1)[0])
+				evaluations[el.id].image = p('.bg-image-item.profile-image').attr("style")
+			}
+		} else {
+			if(evaluations[el.id].url == undefined && el.url != undefined && el.username != undefined) {
+				evaluations[el.id].url = el.url
+				evaluations[el.id].username = el.username
+				var userHtml = await request(el.url)
+				var p = cheerio.load(userHtml)
+				evaluations[el.id].place = parseString(p('.user-poste-infos').text().split('.', 1)[0])
+				evaluations[el.id].image = p('.bg-image-item.profile-image').attr("style")
+			}
+		}
+	}
+	/*Remove passed eval if not in eval object*/
+	for (const [key, value] of Object.entries(evaluations)) {
+		if(!evals.some((el) => {
+			return el.id === key;
+		})) {
+			delete evaluations[key]
+		}
+	}
+	evalNotif()
+}
+
+function evalNotif() {
+	var evals = Object.values(evaluations).sort((a,b) => {
+		return new Date(a.time) - new Date(b.time)
+	})
+	evals.forEach((el, i) => {
+		const endDate = new Date(el.time)
+		const now = new Date()
+		if(endDate - now > 0) {
+			setTimeout(() => {
+				const diff = getDiff(endDate)
+				var options = {
+					silent: true,
+					timeoutType: 'never'
+				}
+				if(!el.first_notif && diff.minutes < 14 && diff.hours == 0) {
+					Object.keys(evaluations)[i].new_notif = true
+					Object.keys(evaluations)[i].first_notif = true
+					Object.keys(evaluations)[i].last_notif = true
+					options.title = "Intra Notifier: last"
+					if(el.text.startsWith("You will evaluate")) {
+						options.subtitle = `You will evaluate someone in ${diffDate(endDate)}`
+					} else {
+						options.subtitle = `You will be evaluated in ${diffDate(endDate)}`
+					}
+				}
+				if(!el.last_notif && diff.minutes <= 14 && diff.hours == 0) {
+					Object.keys(evaluations)[i].new_notif = true
+					Object.keys(evaluations)[i].first_notif = true
+					options.title = "Intra Notifier: first"
+					if(el.text.startsWith("You will evaluate")) {
+						options.subtitle = `You will evaluate someone in ${diffDate(endDate)}`
+					} else {
+						options.subtitle = `You will be evaluated in ${diffDate(endDate)}`
+					}
+				}
+				if(!el.new_notif && ((diff.minutes > 14 && diff.hours == 0) || diff.hours > 0)) {
+					Object.keys(evaluations)[i].new_notif = true
+					options.title = "Intra Notifier: New evaluation !"
+					if(el.text.startsWith("You will evaluate")) {
+						options.subtitle = `You will evaluate someone in ${diffDate(endDate)}`
+					} else {
+						options.subtitle = `You will be evaluated in ${diffDate(endDate)}`
+					}
+				}
+				new Notification(options).show()
+			}, i * 5000)
+		}
+	})
+}
+
 function parseString(str) {
 	return str.replace(/[^\x20-\x7E]/g, '').trim()
+}
+
+function getDiff(endDate) {
+	const today = new Date()
+	var seconds = Math.floor((endDate - today)/1000)
+	var minutes = Math.floor(seconds/60)
+	var hours = Math.floor(minutes/60)
+	var days = Math.floor(hours/24)
+	hours = hours-(days*24)
+	minutes = minutes-(days*24*60)-(hours*60)
+	seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60)
+	return {
+		seconds,
+		minutes,
+		hours
+	}
+}
+
+function diffDate(endDate) {
+	const today = new Date()
+	const time = getDiff(endDate)
+	if(endDate - today < 0)
+	{
+		return `few seconds`
+	} else {
+		if(time.hours > 0 || time.minutes > 0) {
+			return `${time.hours > 0 ? time.hours + " hours " : ""}${time.minutes > 0 ? time.minutes + " mins " : ""}`
+		} else {
+			return `${time.seconds} secs`
+		}
+	}
 }
