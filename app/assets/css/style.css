@@ -15,7 +15,7 @@
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		background: #040809e5;
+		background: rgba(0, 0, 0, 0.8);
 		color: #fff;
 	}
 	input {
@@ -46,24 +46,19 @@ body {
 	position: absolute;
 	top: 0;
 	left: 0;
-	height: 40px;
+	height: 30px;
 	width: 100%;
 }
 
 .drag-area {
+	position: relative;
 	display: flex;
 	align-items: center;
 	width: 100%;
-	height: 40px;
+	height: 30px;
 	padding: 0 15px;
 	user-select: none;
   	-webkit-app-region: drag;
-}
-
-.drag p {
-	font-family: 'MetropolisExtraBold', sans-serif;
-	font-weight: 800;
-	font-size: 12px;
 }
 
 .container {
@@ -73,32 +68,7 @@ body {
 
 .center {
 	display: flex;
+	justify-content: center;
 	align-items: center;
-	justify-content: center;
 	flex-direction: column;
-}
-
-#login .form {
-	display: flex;
-	align-items: flex-start;
-	justify-content: center;
-	flex-direction: column;
-}
-
-.form h3 {
-	color: #79797b;
-	font-family: 'Metropolis', sans-serif;
-}
-
-input {
-	font-size: 15px;
-	padding: 5px 10px;
-	border-radius: 5px;
-	background: transparent;
-	margin-bottom: 10px;
-	font-weight: 500;
-}
-
-input:focus {
-	outline: none;
 }

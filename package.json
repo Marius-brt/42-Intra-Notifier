@@ -15,10 +15,11 @@
     "electron-builder": "^22.10.5"
   },
   "dependencies": {
+    "axios": "^0.21.4",
     "cheerio": "^1.0.0-rc.10",
     "chrome-paths": "^1.0.1",
+    "crypto": "^1.0.1",
     "electron-store": "^8.0.0",
-    "glasstron": "^0.1.0",
     "puppeteer-core": "^10.2.0"
   },
   "build": {
