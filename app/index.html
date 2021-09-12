@@ -13,18 +13,23 @@
     <div class="drag">
         <div class="drag-area" draggable="true"></div>
     </div>
-    <div class="container center" id="login" style="display: none;">
+    <div class="container center" id="login">
         <div class="form">
             <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="Password">
-            <button>Login</button>
+            <button onclick="login()" id="login_btn">Login</button>
+			<p id="error_message"></p>
         </div>
     </div>
-    <div class="timeline">
-        <ul id="timeline">
-
-        </ul>
-    </div>
+	<div id="app" style="display: none;">
+		<button onclick="logout()">Logout</button>
+		<div class="timeline" style="display: none;">
+			<ul id="timeline">
+	
+			</ul>
+		</div>
+	</div>
+	<script>window.$ = window.jQuery = require('./assets/js/jquery-3.6.0.min.js');</script>
     <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/app.js"></script>
 </body>

@@ -65,7 +65,7 @@ async function getUserData() {
 			level: parseInt($(el).find(".on-progress").text().replace(/[^0-9]/g, '').split('')[0])
 		}
 	}).get()
-	/*var evals = $('.project-item.reminder').map((i, el) => {
+	var evals = $('.project-item.reminder').map((i, el) => {
 		return {
 			id: $(el).attr("data-scale-team"),
 			text: $(el).find('.project-item-text').text().replace(/[^\x20-\x7E]/g, ''),
@@ -78,8 +78,8 @@ async function getUserData() {
 			place: '',
 			image: ''
 		}
-	}).get()*/
-	var evals = [
+	}).get()
+	/*var evals = [
         {
             "id": "3528107",
             "text": "You will be evaluated by bsouleau on C Piscine C 06",
@@ -122,7 +122,7 @@ async function getUserData() {
             "place": "",
 			"image": ''
         }
-    ]
+    ]*/
 	await checkNotif(evals)
 	return {
 		user_data: data[0],
@@ -135,7 +135,7 @@ async function getCookies() {
 	const page = await browser.newPage()	
 	await page.goto('https://signin.intra.42.fr/users/sign_in')
 	await page.type('#user_login', store.get('username'))
-	await page.type('#user_password', store.get('password'))
+	await page.type('#user_password', crypto.decrypt(store.get('password')))
 	await page.keyboard.press('Enter')
 	await page.waitForNavigation()
 	if (page.url() == "https://profile.intra.42.fr/") {
@@ -257,19 +257,42 @@ function evalNotif() {
 	})
 }
 
+ipcMain.on("login", async (event, args) => {
+	if (args.username != '' && args.password != '') {
+		win.webContents.send("try_login")
+		store.set('username', args.username)
+		store.set('password', crypto.encrypt(args.password))
+		if(await getCookies()) {
+			win.webContents.send("logged")
+			win.webContents.send("user_data", await getUserData())
+		} else {
+			store.delete('username')
+			store.delete('password')
+			win.webContents.send("failed_login")
+		}
+	}
+})
+
+ipcMain.on("logout", async (event, args) => {
+	if (store.get('username') && store.get('password')) {
+		store.delete('username')
+		store.delete('password')
+	}
+})
+
 function parseString(str) {
 	return str.replace(/[^\x20-\x7E]/g, '').trim()
 }
 
 function getDiff(endDate) {
 	const today = new Date()
-	var seconds = Math.floor((endDate - today)/1000)
-	var minutes = Math.floor(seconds/60)
-	var hours = Math.floor(minutes/60)
-	var days = Math.floor(hours/24)
-	hours = hours-(days*24)
-	minutes = minutes-(days*24*60)-(hours*60)
-	seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60)
+	var seconds = Math.floor((endDate - today) / 1000)
+	var minutes = Math.floor(seconds / 60)
+	var hours = Math.floor(minutes / 60)
+	var days = Math.floor(hours / 24)
+	hours = hours - (days * 24)
+	minutes = minutes - (days * 24 * 60) - (hours * 60)
+	seconds = seconds - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60)
 	return {
 		seconds,
 		minutes,

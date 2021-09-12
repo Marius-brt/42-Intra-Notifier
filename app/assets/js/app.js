@@ -1,4 +1,4 @@
-//const { ipcRenderer } = require('electron')
+const { ipcRenderer } = require('electron')
 
 var evals = [{
         "id": "3528107",
@@ -60,6 +60,11 @@ evals.forEach(el => {
 	</li>`)
 })
 
+ipcRenderer.on("init_data", (event, data) => {
+	document.getElementById('username').value = data.username
+	document.getElementById('password').value = data.password
+})
+
 function addMinutes(date, minutes) {
     return new Date(date.getTime() + minutes * 60000);
 }
@@ -77,3 +82,44 @@ function addMinutes(date, minutes) {
 		</span>
 	</li>`)
 })*/
+
+ipcRenderer.on("user_data", (event, data) => {
+	console.log(data)
+})
+
+ipcRenderer.on("logged", (event, data) => {
+	$('#login').hide()
+	$('#app').show()
+})
+
+ipcRenderer.on("try_login", (event, data) => {
+	$("#username").prop('disabled', true);
+	$("#password").prop('disabled', true);
+	$("#login_btn").prop('disabled', true);
+})
+
+ipcRenderer.on("failed_login", (event, data) => {
+	$('#error_message').text('Failed login')
+	$("#username").prop('disabled', false);
+	$("#password").prop('disabled', false);
+	$("#login_btn").prop('disabled', false);
+})
+
+function login() {
+	if(document.getElementById('username').value != '' && document.getElementById('password').value != '') {
+		$('#error_message').text('')
+		ipcRenderer.send('login', 
+		{
+			username: document.getElementById('username').value,
+			password: document.getElementById('password').value
+		})
+	} else {
+		$('#error_message').text('Missing Username or/and Password')
+	}
+}
+
+function logout() {
+	$('#app').hide()
+	$('#login').show()
+	ipcRenderer.send('logout')
+}

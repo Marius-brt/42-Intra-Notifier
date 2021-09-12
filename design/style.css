@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css?family=Chivo:300,300i,400,400i,700,700i,900,900i|Saira+Extra+Condensed:100,200,300,400,500,600,700,800|Saira:100,200,300,400,500,600,700,800');
+@media (prefers-color-scheme: dark) {
+    body {
+        --background: #171721;
+        --color: #fff;
+        --timeline-bg: rgba(255, 255, 255, 0.05);
+        --p-color: rgba(255, 255, 255, 0.8);
+        --border: #dfdfdf;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    body {
+        --background: rgba(255, 255, 255, 1);
+        --color: #000;
+        --timeline-bg: rgba(40, 40, 40, 0.05);
+        --p-color: rgba(45, 45, 45, 0.8);
+        --border: #636363;
+    }
+}
+
+body {
+    overflow-x: hidden;
+    font-size: 16px;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+    color: var(--color);
+    background: var(--background);
+    font-family: 'Saira', sans-serif;
+}
+
+p {
+    font-weight: 300;
+}
+
+strong {
+    font-weight: 600;
+}
+
+h1 {
+    letter-spacing: 1.5px;
+    color: white;
+    font-weight: 400;
+    font-size: 2.4em;
+}
+
+#timeline-content {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.timeline {
+    border-left: 4px solid var(--border);
+    color: var(--p-color);
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+    background: var(--timeline-bg);
+    font-family: 'Chivo', sans-serif;
+    margin: 50px auto;
+    letter-spacing: 0.5px;
+    position: relative;
+    line-height: 1.4em;
+    font-size: 1.03em;
+    padding: 50px;
+    list-style: none;
+    text-align: left;
+    font-weight: 100;
+    max-width: 450px;
+}
+
+.timeline h1 {
+    font-family: 'Saira', sans-serif;
+    letter-spacing: 1.5px;
+    font-weight: 100;
+    font-size: 1.4em;
+}
+
+.timeline h2,
+.timeline h3 {
+    font-family: 'Saira', sans-serif;
+    letter-spacing: 1.5px;
+    font-weight: 400;
+    font-size: 1.4em;
+}
+
+.timeline .event {
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    padding-bottom: 25px;
+    margin-bottom: 50px;
+    position: relative;
+}
+
+.timeline .event:last-of-type {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border: none;
+}
+
+.timeline .event:before,
+.timeline .event:after {
+    position: absolute;
+    display: block;
+    top: 0;
+}
+
+.timeline .event:before {
+    left: -217.5px;
+    content: attr(data-date);
+    color: var(--p-color);
+    text-align: right;
+    font-weight: 100;
+    font-size: 0.9em;
+    min-width: 120px;
+    font-family: 'Saira', sans-serif;
+}
+
+.timeline .event:after {
+    background: var(--background);
+    box-shadow: 0 0 0 4px var(--border);
+    left: -57.85px;
+    border-radius: 50%;
+    height: 11px;
+    width: 11px;
+    content: "";
+    top: 5px;
+}
+
+.evaluator {
+    font-weight: bold;
+    cursor: pointer;
+    color: rgb(129, 188, 233);
+    text-decoration: underline;
+    transition: 0.2s;
+}
+
+.evaluator:hover {
+    background: rgb(129, 188, 233);
+    color: #fff;
+    padding: 0 1px;
+    transition: 0.2s;
+}
+
+.event i {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.event i p {
+    margin-left: 10px;
+    font-family: 'Saira', sans-serif;
+    font-size: 14px;
+}
