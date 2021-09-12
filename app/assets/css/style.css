@@ -6,17 +6,17 @@
         --timeline-bg: rgba(255, 255, 255, 0.05);
         --p-color: rgba(255, 255, 255, 0.8);
         --border: #dfdfdf;
-        --navbar: rgba(255, 255, 255, 0.05);
-        --card: rgba(255, 255, 255, 0.05);
+        --card: rgb(37 37 43);
         --input: #6b6a73;
         --input-bg: #1e1d25;
         --input-disabled-bg: #44444e;
         --input-disabled: rgb(155, 155, 155);
         --button: #fff;
-        --button-hover: rgb(240, 240, 240);
         --button-color: #000;
         --button-disabled: rgb(210, 210, 210);
         --button-disabled-color: rgb(58, 58, 58);
+        --hover: rgb(50, 50, 50);
+        --small-border: rgb(68, 68, 68);
     }
     .logo_42 {
         height: 200px;
@@ -28,20 +28,20 @@
     body {
         --background: #f5f5fd;
         --color: #000;
-        --timeline-bg: rgba(40, 40, 40, 0.05);
+        --timeline-bg: rgba(94, 94, 94, 0.05);
         --p-color: rgba(45, 45, 45, 0.8);
         --border: #636363;
-        --navbar: rgb(244 244 244);
         --card: #fff;
         --input: rgb(126, 126, 126);
         --input-bg: #fff;
         --input-disabled-bg: #dfdfdf;
         --input-disabled: rgb(124, 124, 124);
         --button: #000;
-        --button-hover: rgb(26, 26, 26);
         --button-color: #fff;
         --button-disabled: rgb(77, 77, 77);
         --button-disabled-color: rgb(196, 196, 196);
+        --hover: rgb(244, 244, 244);
+        --small-border: #636363;
     }
     .logo_42 {
         height: 200px;
@@ -134,51 +134,71 @@ h3 {
 /*NAVBAR*/
 
 .navbar {
-    position: relative;
-    background: var(--navbar);
-    height: 100%;
-    width: 200px;
+    padding-top: 30px;
+    width: 95%;
+    height: 80px;
     display: flex;
+    justify-content: flex-end;
     align-items: center;
-    box-sizing: border-box;
-    flex-direction: column;
-    padding-top: 40px;
 }
 
-#user-avatar {
-    margin-bottom: 10px;
-    width: 100px;
-    height: 100px;
+.navbar .profile {
+    position: relative;
+    background: var(--card);
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 5px 15px 5px 5px;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    border: solid 1px var(--small-border);
+}
+
+#profile-username {
+    margin: 0 10px;
+}
+
+#profile-avatar {
+    height: 40px;
+    width: 40px;
     background-position: center;
     background-size: cover;
     border-radius: 5px;
 }
 
-#user-username {
-    font-size: 14px;
-}
-
-#user-name {
-    font-size: 18px;
-}
-
-.nav-icons {
+#dropdown {
+    background: var(--card);
+    right: -1px;
+    width: 100%;
+    top: 48px;
+    border-radius: 0 0 5px 5px;
     position: absolute;
-    bottom: 25px;
+    border-bottom: solid 1px var(--small-border);
+    border-left: solid 1px var(--small-border);
+    border-right: solid 1px var(--small-border);
 }
 
-.nav-icons i {
+#dropdown ul {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+#dropdown li {
+    padding: 5px 0;
+    padding-right: 15px;
+    border-top: solid 1px var(--small-border);
+    text-align: right;
     cursor: pointer;
-    padding: 10px;
-    font-size: 20px;
-    margin: 0 5px;
-    border-radius: 100%;
-    transition: 0.1s;
 }
 
-.nav-icons i:hover {
-    transition: 0.1s;
-    background: var(--background);
+#dropdown li:hover {
+    background-color: var(--hover);
+}
+
+#dropdown li i {
+    margin-left: 10px;
 }
 
 
@@ -190,9 +210,10 @@ h3 {
 .cards {
     margin-bottom: 50px;
     margin-top: 50px;
-    width: 90%;
-    display: flex;
-    flex-direction: row;
+    width: 95%;
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .card {
@@ -230,7 +251,6 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    padding: 20px;
     box-sizing: border-box;
     height: 100%;
     overflow-y: auto;
@@ -373,6 +393,7 @@ h3 {
 }
 
 .login-container h1 {
+    color: var(--color);
     text-align: left;
     font-weight: 700;
     font-size: 30px;
@@ -433,8 +454,8 @@ button {
     font-weight: 600;
 }
 
-button:enabled:hover {
-    background: var(--button-hover);
+button i {
+    margin-right: 10px;
 }
 
 button:disabled {
@@ -447,5 +468,175 @@ button:disabled {
     text-align: center;
 }
 
+#loading {
+    z-index: 100;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+}
+
 
 /*END LOGIN*/
+
+#settings {
+    z-index: 10;
+    display: flex;
+    justify-content: start;
+}
+
+.page-top-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 50px;
+}
+
+.page-top-bar h1 {
+    color: var(--color);
+    margin: 0;
+    font-weight: 600;
+}
+
+.icon-btn {
+    position: absolute;
+    left: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 40px;
+    width: 40px;
+    background: var(--button-color);
+    border-radius: 10px;
+    border: solid 1px var(--border);
+}
+
+
+/*SPINNER*/
+
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #fff transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+/*END SPINNER*/
+
+
+/*CHECKBOX*/
+
+input[type=checkbox] {
+    height: 17px;
+    width: 17px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+input[type=checkbox]+label {
+    color: var(--color);
+    cursor: pointer;
+}
+
+input[type=checkbox]:checked+label {
+    color: var(--color);
+    font-weight: 500;
+}
+
+input[type="checkbox"]:checked+label::after {
+    content: '';
+    position: absolute;
+    width: 1.2ex;
+    height: 0.4ex;
+    background: var(--color);
+    top: 0.9ex;
+    left: 0.4ex;
+    border: 3px solid var(--button-color);
+    border-top: none;
+    border-right: none;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+input[type="checkbox"] {
+    line-height: 2.1ex;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    position: absolute;
+    left: -999em;
+}
+
+input[type="checkbox"]+label {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+input[type="checkbox"]+label::before {
+    content: "";
+    display: inline-block;
+    vertical-align: -10%;
+    height: 2ex;
+    width: 2ex;
+    background-color: transparent;
+    color: var(--color);
+    border-radius: 4px;
+    box-shadow: none;
+    border: var(--color) solid 1px;
+    margin-right: 0.5em;
+}
+
+input[type="checkbox"]:checked+label::before {
+    background-color: var(--button);
+}
+
+
+/*END CHECKBOX*/

@@ -16,15 +16,25 @@
     <div class="drag">
         <div class="drag-area" draggable="true"></div>
     </div>
-    <div class="container" id="login">
+    <div class="container" id="login" style="display: none;">
+        <div id="loading" style="display: none;">
+            <div class="lds-ring">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
         <div class="login-container">
             <div style="width: 300px;">
                 <h1>Let's log you in.</h1>
                 <h2>Enter your Intra information</h2>
                 <input type="text" id="username" placeholder="Username">
                 <input type="password" id="password" placeholder="Password">
+                <input type="checkbox" id="stay_logged" checked>
+                <label for="stay_logged">Stay logged ?</label>
                 <p id="error_message"></p>
-                <button style="margin-top: 20px;" id="login_btn">Login</button>
+                <button style="margin-top: 20px;" id="login_btn" onclick="login()">Login</button>
             </div>
         </div>
         <div class="vertical-separator"></div>
@@ -33,7 +43,20 @@
         </div>
         <p id="creator">Created by mbrouty and gdurand • Version <span id="version">1.0.0</span></p>
     </div>
-    <div class="container" id="app" style="display: none;">
+    <div class="container" id="app">
+        <div class="navbar">
+            <div class="profile">
+                <div id="profile-avatar" style="background-image: url(https://cdn.intra.42.fr/users/small_mbrouty.jpg)"></div>
+                <p id="profile-username">mbrouty</p>
+                <i class="fas fa-chevron-down"></i>
+                <div id="dropdown">
+                    <ul>
+                        <li onclick="settings(true)">Settings<i class="fas fa-cog"></i></li>
+                        <li onclick="logout()">Logout<i class="fas fa-sign-out-alt"></i></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div class="cards">
             <div class="card">
                 <i class="fas fa-chart-line"></i>
@@ -52,7 +75,7 @@
             </div>
         </div>
         <div id="timeline-content" style="width: 90%;">
-            <h3 style="position: absolute; left: 20px;">Evaluations</h3>
+            <h3 style="position: absolute; left: 0px;">Evaluations</h3>
             <div style="width: 100%; margin-top: 80px;" id="not_found">
                 <p style="text-align: center;">No evaluation found :(</p>
             </div>
@@ -68,6 +91,18 @@
                     <i class="far fa-clock"><p>30 mins</p></i>
                 </li>
             </ul>
+        </div>
+    </div>
+    <div class="container" id="settings" style="display: none;">
+        <div class="page-top-bar">
+            <h1>Settings</h1>
+            <div class="icon-btn" onclick="settings(false)">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+        </div>
+        <h3 style="margin-top: 100px;">Nothing here actually :(</h3>
+        <div style="position: absolute; bottom: 25px;">
+            <button style="width: 300px;" onclick='require("electron").shell.openExternal("https://github.com/Marius-brt/42-Intra-Notifier")'><i class="fab fa-github"></i>Github</button>
         </div>
     </div>
     <script>

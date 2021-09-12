@@ -3,7 +3,26 @@ const { ipcRenderer } = require('electron')
 $('#app').hide()
 $('#login').show()
 
+function settings(value) {
+    if (value) {
+        $('#app').hide()
+        $('#settings').show()
+    } else {
+        $('#app').show()
+        $('#settings').hide()
+    }
+}
+
 ipcRenderer.on("version", (event, data) => {
+    fetch('https://raw.githubusercontent.com/Marius-brt/42-Intra-Notifier/main/version.txt')
+        .then(response => response.text())
+        .then(version => {
+            if (parseInt(version.replace(/\./g, "")) > parseInt(data.replace(/\./g, ""))) {
+                console.log("new version available")
+            } else {
+                console.log("up to date")
+            }
+        });
     $('#version').text(data)
 })
 
@@ -13,7 +32,6 @@ ipcRenderer.on("init_data", (event, data) => {
 })
 
 ipcRenderer.on("user_data", (event, data) => {
-    console.log(data)
     var evals = Object.values(data.evaluations)
     $("#evaluations").empty()
 
@@ -50,15 +68,18 @@ ipcRenderer.on("user_data", (event, data) => {
 ipcRenderer.on("logged", (event, data) => {
     $('#login').hide()
     $('#app').show()
+    $('#loading').hide()
 })
 
 ipcRenderer.on("try_login", (event, data) => {
+    $('#loading').show()
     $("#username").prop('disabled', true);
     $("#password").prop('disabled', true);
     $("#login_btn").prop('disabled', true);
 })
 
 ipcRenderer.on("failed_login", (event, data) => {
+    $('#loading').hide()
     $('#error_message').text('Failed login')
     $("#username").prop('disabled', false);
     $("#password").prop('disabled', false);
@@ -70,7 +91,8 @@ function login() {
         $('#error_message').text('')
         ipcRenderer.send('login', {
             username: document.getElementById('username').value,
-            password: document.getElementById('password').value
+            password: document.getElementById('password').value,
+            save: $('#stay_logged').is(":checked")
         })
     } else {
         $('#error_message').text('Missing Username or/and Password')
@@ -78,6 +100,9 @@ function login() {
 }
 
 function logout() {
+    document.getElementById('username').value = ''
+    document.getElementById('password').value = ''
+    $('#loading').hide()
     $('#app').hide()
     $('#login').show()
     $("#username").prop('disabled', false);

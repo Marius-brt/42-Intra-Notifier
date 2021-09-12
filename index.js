@@ -20,16 +20,17 @@ var cookieString = ''
 var evaluations = {}
 var win = null
 var interval = null
+var password, username
 
 function spawnWindow() {
     win = new BrowserWindow({
         width: 1000,
-        height: 800,
+        height: 700,
         autoHideMenuBar: true,
         titleBarStyle: 'hidden',
         show: false,
-        minWidth: 800,
-        minHeight: 600,
+        minWidth: 900,
+        minHeight: 700,
         maximizable: false,
         webPreferences: {
             nativeWindowOpen: false,
@@ -48,8 +49,10 @@ function spawnWindow() {
         if (store.get('username') && store.get('password')) {
             win.webContents.send("init_data", {
                 username: store.get("username"),
-                password: store.get("password")
+                password: crypto.decrypt(store.get("password"))
             })
+            username = store.get("username")
+            password = crypto.decrypt(store.get("password"))
             win.webContents.send("try_login")
             if (await getCookies()) {
                 await win.webContents.send("user_data", await getUserData())
@@ -102,8 +105,8 @@ async function getCookies() {
     const browser = await puppeteer.launch({ headless: true, executablePath: chrome.chrome })
     const page = await browser.newPage()
     await page.goto('https://signin.intra.42.fr/users/sign_in')
-    await page.type('#user_login', store.get('username'))
-    await page.type('#user_password', crypto.decrypt(store.get('password')))
+    await page.type('#user_login', username)
+    await page.type('#user_password', password)
     await page.keyboard.press('Enter')
     await page.waitForNavigation()
     if (page.url() == "https://profile.intra.42.fr/") {
@@ -230,8 +233,12 @@ function evalNotif() {
 ipcMain.on("login", async(event, args) => {
     if (args.username != '' && args.password != '') {
         win.webContents.send("try_login")
-        store.set('username', args.username)
-        store.set('password', crypto.encrypt(args.password))
+        if (args.save) {
+            store.set('username', args.username)
+            store.set('password', crypto.encrypt(args.password))
+        }
+        username = args.username
+        password = args.password
         if (await getCookies()) {
             await win.webContents.send("user_data", await getUserData())
             win.webContents.send("logged")
@@ -248,6 +255,10 @@ ipcMain.on("login", async(event, args) => {
 
 ipcMain.on("logout", async(event, args) => {
     if (store.get('username') && store.get('password')) {
+        clearInterval(interval)
+        username = ''
+        password = ''
+        cookieString = ''
         store.delete('username')
         store.delete('password')
     }
