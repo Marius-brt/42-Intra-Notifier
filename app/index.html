@@ -6,30 +6,73 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intra Notifier</title>
+    <meta name="color-scheme" content="light dark">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"
+    />
 </head>
 
 <body>
     <div class="drag">
         <div class="drag-area" draggable="true"></div>
     </div>
-    <div class="container center" id="login">
-        <div class="form">
-            <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
-            <button onclick="login()" id="login_btn">Login</button>
-			<p id="error_message"></p>
+    <div class="container" id="login">
+        <div class="login-container">
+            <div style="width: 300px;">
+                <h1>Let's log you in.</h1>
+                <h2>Enter your Intra information</h2>
+                <input type="text" id="username" placeholder="Username">
+                <input type="password" id="password" placeholder="Password">
+                <p id="error_message"></p>
+                <button style="margin-top: 20px;" id="login_btn">Login</button>
+            </div>
+        </div>
+        <div class="vertical-separator"></div>
+        <div class="login-img">
+            <img src="./assets/images/42_logo.svg" class="logo_42">
+        </div>
+        <p id="creator">Created by mbrouty and gdurand • Version <span id="version">1.0.0</span></p>
+    </div>
+    <div class="container" id="app" style="display: none;">
+        <div class="cards">
+            <div class="card">
+                <i class="fas fa-chart-line"></i>
+                <p>Grade</p>
+                <h2 id="grade-card"></h2>
+            </div>
+            <div class="card">
+                <i class="fas fa-chart-line"></i>
+                <p>Level</p>
+                <h2 id="level-card"></h2>
+            </div>
+            <div class="card">
+                <i class="fas fa-receipt"></i>
+                <p>Evaluation points</p>
+                <h2 id="points-card"></h2>
+            </div>
+        </div>
+        <div id="timeline-content" style="width: 90%;">
+            <h3 style="position: absolute; left: 20px;">Evaluations</h3>
+            <div style="width: 100%; margin-top: 80px;" id="not_found">
+                <p style="text-align: center;">No evaluation found :(</p>
+            </div>
+            <ul class="timeline" id="evaluations">
+                <li class="event" data-date="15:30">
+                    <h3>Evaluation</h3>
+                    <p>You will be evaluated by <span class="evaluator">bsouleau</span> on C Piscine C 06</p>
+                    <i class="far fa-clock"><p>15 mins</p></i>
+                </li>
+                <li class="event" data-date="15:45">
+                    <h3>Correction</h3>
+                    <p>You will evaluate somebody on C Piscine C 00</p>
+                    <i class="far fa-clock"><p>30 mins</p></i>
+                </li>
+            </ul>
         </div>
     </div>
-	<div id="app" style="display: none;">
-		<button onclick="logout()">Logout</button>
-		<div class="timeline" style="display: none;">
-			<ul id="timeline">
-	
-			</ul>
-		</div>
-	</div>
-	<script>window.$ = window.jQuery = require('./assets/js/jquery-3.6.0.min.js');</script>
+    <script>
+        window.$ = window.jQuery = require('./assets/js/jquery-3.6.0.min.js');
+    </script>
     <script src="assets/js/jquery-3.6.0.min.js"></script>
     <script src="assets/js/app.js"></script>
 </body>

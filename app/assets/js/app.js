@@ -1,125 +1,117 @@
 const { ipcRenderer } = require('electron')
 
-var evals = [{
-        "id": "3528107",
-        "text": "You will be evaluated by bsouleau on C Piscine C 06",
-        "time": 1631280303353,
-        "first_notif": false,
-        "last_notif": false,
-        "new_notif": false,
-        "username": "bsouleau",
-        "url": "https://profile.intra.42.fr/users/bsouleau",
-        "place": "",
-        "image": ''
-    },
-    {
-        "id": "3528108",
-        "text": "You will be evaluated on C Piscine C 07",
-        "time": 1631277605870,
-        "first_notif": false,
-        "last_notif": false,
-        "new_notif": false,
-        "place": "",
-        "image": ''
-    },
-    {
-        "id": "3528109",
-        "text": "You will be evaluated on C Piscine C 07",
-        "time": 1631272500000,
-        "first_notif": false,
-        "last_notif": false,
-        "new_notif": false,
-        "place": "",
-        "image": ''
-    },
-    {
-        "id": "3528110",
-        "text": "You will be evaluated on OUI",
-        "time": 1631277605870,
-        "first_notif": false,
-        "last_notif": false,
-        "new_notif": false,
-        "place": "",
-        "image": ''
-    }
-]
+$('#app').hide()
+$('#login').show()
 
-evals.forEach(el => {
-    var date = new Date(el.time)
-    var end = addMinutes(date, 15)
-    $("#timeline").append(`<li>
-		<span></span>
-		<div>
-			<div class="info">${el.text}</div>
-			<div class="image" style="${el.image != '' ? el.image : "background-image: url('assets/images/avatars/" + Math.floor(Math.random()*(10-1+1)+1) + ".png')"}">
-		</div>
-		<span class="number">
-			<span>${date.getHours()}:${date.getMinutes()}</span>
-			<span>${end.getHours()}:${end.getMinutes()}</span>
-		</span>
-	</li>`)
+ipcRenderer.on("version", (event, data) => {
+    $('#version').text(data)
 })
 
 ipcRenderer.on("init_data", (event, data) => {
-	document.getElementById('username').value = data.username
-	document.getElementById('password').value = data.password
+    document.getElementById('username').value = data.username
+    document.getElementById('password').value = data.password
 })
 
-function addMinutes(date, minutes) {
-    return new Date(date.getTime() + minutes * 60000);
-}
-/*ipcRenderer.on("user_data", (event, data) => {
-    document.getElementById("timeline").appendChild(` <li>
-		<span></span>
-		<div>
-			<div class="title">Test</div>
-			<div class="info">Let's make coolest things in css</div>
-			<div class="type">Prensetation</div>
-		</div>
-		<span class="number">
-			<span>10:15</span>
-		<span>12:00</span>
-		</span>
-	</li>`)
-})*/
+ipcRenderer.on("user_data", (event, data) => {
+    console.log(data)
+    var evals = Object.values(data.evaluations)
+    $("#evaluations").empty()
+
+    if (evals.length > 0) {
+        $('#not_found').hide()
+        $('#evaluations').show()
+    } else {
+        $('#not_found').show()
+        $('#evaluations').hide()
+    }
+
+    evals = evals.sort((a, b) => {
+        return new Date(a.time) - new Date(b.time)
+    })
+
+    evals.forEach(el => {
+        var date = new Date(el.time)
+        $("#evaluations").append(`
+			<li class="event" data-date="${date.getHours()}:${date.getMinutes()}">
+				<h3>${el.text.startsWith("You will evaluate") ? "Correction" : "Evaluation"}</h3>
+				<p>${el.text}</p>
+				<i class="far fa-clock"><p>${diffDate(date)}</p></i>
+			</li>`)
+    })
+    $('#points-card').text(data.user_data.points)
+    $('#grade-card').text(data.user_data.grade)
+    $('#level-card').text(data.user_data.level)
+})
 
 ipcRenderer.on("user_data", (event, data) => {
-	console.log(data)
+    console.log(data)
 })
 
 ipcRenderer.on("logged", (event, data) => {
-	$('#login').hide()
-	$('#app').show()
+    $('#login').hide()
+    $('#app').show()
 })
 
 ipcRenderer.on("try_login", (event, data) => {
-	$("#username").prop('disabled', true);
-	$("#password").prop('disabled', true);
-	$("#login_btn").prop('disabled', true);
+    $("#username").prop('disabled', true);
+    $("#password").prop('disabled', true);
+    $("#login_btn").prop('disabled', true);
 })
 
 ipcRenderer.on("failed_login", (event, data) => {
-	$('#error_message').text('Failed login')
-	$("#username").prop('disabled', false);
-	$("#password").prop('disabled', false);
-	$("#login_btn").prop('disabled', false);
+    $('#error_message').text('Failed login')
+    $("#username").prop('disabled', false);
+    $("#password").prop('disabled', false);
+    $("#login_btn").prop('disabled', false);
 })
 
 function login() {
-	if(document.getElementById('username').value != '' && document.getElementById('password').value != '') {
-		$('#error_message').text('')
-		ipcRenderer.send('login', 
-		{
-			username: document.getElementById('username').value,
-			password: document.getElementById('password').value
-		})
-	} else {
-		$('#error_message').text('Missing Username or/and Password')
-	}
+    if (document.getElementById('username').value != '' && document.getElementById('password').value != '') {
+        $('#error_message').text('')
+        ipcRenderer.send('login', {
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value
+        })
+    } else {
+        $('#error_message').text('Missing Username or/and Password')
+    }
 }
 
 function logout() {
-	$('#app').hide()
-	$('#login').show()
-	ipcRenderer.send('logout')
+    $('#app').hide()
+    $('#login').show()
+    $("#username").prop('disabled', false);
+    $("#password").prop('disabled', false);
+    $("#login_btn").prop('disabled', false);
+    ipcRenderer.send('logout')
+}
+
+function getDiff(endDate) {
+    const today = new Date()
+    var seconds = Math.floor((endDate - today) / 1000)
+    var minutes = Math.floor(seconds / 60)
+    var hours = Math.floor(minutes / 60)
+    var days = Math.floor(hours / 24)
+    hours = hours - (days * 24)
+    minutes = minutes - (days * 24 * 60) - (hours * 60)
+    seconds = seconds - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60)
+    return {
+        seconds,
+        minutes,
+        hours
+    }
+}
+
+function diffDate(endDate) {
+    const today = new Date()
+    const time = getDiff(endDate)
+    if (endDate - today < 0) {
+        return `few seconds`
+    } else {
+        if (time.hours > 0 || time.minutes > 0) {
+            return `${time.hours > 0 ? time.hours + " hours " : ""}${time.minutes > 0 ? time.minutes + " mins " : ""}`
+        } else {
+            return `${time.seconds} secs`
+        }
+    }
 }
