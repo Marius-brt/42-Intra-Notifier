@@ -97,10 +97,6 @@ ipcRenderer.on("user_data", (event, data) => {
     $('#profile-avatar').attr('style', data.user_data.image);
 })
 
-ipcRenderer.on("user_data", (event, data) => {
-    console.log(data)
-})
-
 ipcRenderer.on("logged", (event, data) => {
     $('#login').hide()
     $('#app').show()

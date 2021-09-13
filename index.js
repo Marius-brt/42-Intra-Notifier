@@ -112,13 +112,24 @@ async function getUserData() {
     var evals = $('.project-item.reminder').map((i, el) => {
         var text = $(el).find('.project-item-text').text().replace(/[^\x20-\x7E]/g, '')
         var html = ''
-        if (text.includes('by ')) {
-            var spl1 = text.split('by ')
-            var spl2 = spl1[1].split(' on')
-            spl2[0] = `<span class="evaluator"  onclick='require("electron").shell.openExternal("https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span>`
-            html = spl1[0] + spl2.join('')
+        if (text.startsWith("You will evaluate")) {
+            if (text.includes('someone')) {
+                html = text
+            } else {
+                var spl1 = text.split('evaluate ')
+                var spl2 = spl1[1].split(' on')
+                spl2[0] = `<span class="evaluator" onclick='require("electron").shell.openExternal("https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span>`
+                html = spl1[0] + spl2.join('')
+            }
         } else {
-            html = text
+            if (text.includes('by ')) {
+                var spl1 = text.split('by ')
+                var spl2 = spl1[1].split(' on')
+                spl2[0] = `<span class="evaluator" onclick='require("electron").shell.openExternal("https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span>`
+                html = spl1[0] + spl2.join('')
+            } else {
+                html = text
+            }
         }
         return {
             id: $(el).attr("data-scale-team"),
