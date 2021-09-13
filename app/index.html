@@ -46,10 +46,10 @@
     <div class="container" id="app">
         <div class="navbar">
             <div class="profile-container">
-                <div class="profile" onclick="dropdown()">
-                    <div id="profile-avatar"></div>
-                    <p id="profile-username" class="noselect">username</p>
-                    <i class="fas arrow fa-chevron-down"></i>
+                <div class="profile">
+                    <div id="profile-avatar" style="background-image: url('./assets/images/avatars/10.png');"></div>
+                    <p id="profile-username" class="noselect">jdoe</p>
+                    <i class="fas arrow fa-chevron-up"></i>
                 </div>
                 <div id="dropdown" style="display: none;" class="noselect">
                     <ul>
@@ -63,17 +63,17 @@
             <div class="card">
                 <i class="fas fa-chart-line"></i>
                 <p>Grade</p>
-                <h2 id="grade-card"></h2>
+                <h2 id="grade-card">Novice</h2>
             </div>
             <div class="card">
                 <i class="fas fa-trophy"></i>
                 <p>Level</p>
-                <h2 id="level-card"></h2>
+                <h2 id="level-card">7</h2>
             </div>
             <div class="card">
                 <i class="fas fa-receipt"></i>
                 <p>Evaluation points</p>
-                <h2 id="points-card"></h2>
+                <h2 id="points-card">6</h2>
             </div>
         </div>
         <div id="timeline-content" style="width: 90%;">
@@ -82,7 +82,13 @@
                 <p style="text-align: center;">No evaluation found :(</p>
             </div>
             <ul class="timeline" id="evaluations">
-
+                <li class="event noselect" data-date="10:00">
+                    <h3>Correction</h3>
+                    <p>You will be evaluate by someone on C Piscine C00</p>
+                    <div class="timeline-pict" style="background: url('./assets/images/avatars/4.png');"></div>
+                    <p class="subtitle">place: z1r2p3</p>
+                    <i class="far fa-clock"><p>15 mins</p></i>
+                </li>
             </ul>
         </div>
         <a class="noselect nav-link hrvbig" style="cursor: pointer; color: transparent;" onclick="yes()">
@@ -99,6 +105,8 @@
         <div style="margin-top: 60px; width: 250px; text-align: center;" id="version-text">
             <p>gg</p>
         </div>
+        <input type="checkbox" id="notif-sound" checked>
+        <label for="notif-sound" style="margin-top: 20px;">Notification sound</label>
         <div style="position: absolute; bottom: 25px; flex-direction: column; display: flex;">
             <button style="width: 300px;" onclick='require("electron").shell.openExternal("https://github.com/Marius-brt/42-Intra-Notifier")'><i class="fab fa-github"></i>Github</button>
             <button style="width: 300px; margin-top: 10px;" onclick="sw(true)">✨ Generic</button>

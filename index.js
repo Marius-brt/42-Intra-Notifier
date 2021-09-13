@@ -75,10 +75,17 @@ function spawnWindow() {
     win.once('ready-to-show', async() => {
         win.show()
         win.webContents.send("version", app.getVersion())
+        if (store.get('notif_sound') == undefined) {
+            store.set('notif_sound', true)
+        }
+        win.webContents.send("settings", {
+            notif_sound: store.get('notif_sound')
+        })
         if (store.get('username') && store.get('password')) {
             win.webContents.send("init_data", {
                 username: store.get("username"),
-                password: crypto.decrypt(store.get("password"))
+                password: crypto.decrypt(store.get("password")),
+                notif_sound: store.get('notif_sound')
             })
             username = store.get("username")
             password = crypto.decrypt(store.get("password"))
@@ -238,7 +245,7 @@ function evalNotif() {
             setTimeout(() => {
                 const diff = getDiff(endDate)
                 var options = {
-                    silent: true,
+                    silent: !store.get('notif_sound'),
                     timeoutType: 'never'
                 }
                 if (diff.hours == 0 && diff.days == 0) {
@@ -315,6 +322,10 @@ ipcMain.on("logout", async(event, args) => {
         store.delete('username')
         store.delete('password')
     }
+})
+
+ipcMain.on("set_setting", (event, args) => {
+    store.set(args.name, args.value)
 })
 
 function parseString(str) {

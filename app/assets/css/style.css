@@ -394,6 +394,19 @@ h3 {
     font-size: 14px;
 }
 
+.timeline-pict {
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 100px;
+    border: solid 2px var(--border);
+    background-position: center !important;
+    background-size: cover !important;
+    box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
+}
+
 
 /*END TIMELINE*/
 
@@ -612,6 +625,7 @@ input[type=checkbox] {
 }
 
 input[type=checkbox]+label {
+    user-select: none;
     color: var(--color);
     cursor: pointer;
 }

@@ -16,15 +16,35 @@ function settings(value) {
     }
 }
 
+$(document).on("click", (e) => {
+    if (!$(e.target).hasClass('profile') && $(e.target).parent('.profile').length == 0 && drop) {
+        dropdown()
+    }
+
+})
+
+$('.profile').on("click", () => {
+    dropdown()
+})
+
 function dropdown() {
     if (drop) {
         drop = false
         $('#dropdown').hide()
+        $('.profile i').addClass('fa-chevron-up').removeClass('fa-chevron-down')
     } else {
         drop = true
         $('#dropdown').show()
+        $('.profile i').addClass('fa-chevron-down').removeClass('fa-chevron-up')
     }
 }
+
+$('#notif-sound').change(() => {
+    ipcRenderer.send('set_setting', {
+        name: 'notif_sound',
+        value: $('#notif-sound').is(":checked")
+    })
+})
 
 $('#password').on('keypress', function(e) {
     if (e.which === 13) {
@@ -64,6 +84,10 @@ ipcRenderer.on("init_data", (event, data) => {
     document.getElementById('password').value = data.password
 })
 
+ipcRenderer.on("settings", (event, data) => {
+    $('#notif-sound').prop('checked', data.notif_sound);
+})
+
 ipcRenderer.on("user_data", (event, data) => {
     var evals = Object.values(data.evaluations)
     $("#evaluations").empty()
@@ -84,6 +108,7 @@ ipcRenderer.on("user_data", (event, data) => {
         var date = new Date(el.time)
         $("#evaluations").append(`
 			<li class="event noselect" data-date="${twoDigits(date.getHours())}:${twoDigits(date.getMinutes())}">
+				<div class="timeline-pict" style="${el.image != '' ? el.image : "background: url('./assets/images/avatars/" + Math.floor(Math.random()*(10-1+1)+1) + ".png');"}"></div>
 				<h3>${el.text.startsWith("You will evaluate") ? "Correction" : "Evaluation"}</h3>
 				<p>${el.html}</p>
 				<p class="subtitle">${el.text.startsWith("You will evaluate") && el.place ? 'place: ' + el.place : ''}</p>
