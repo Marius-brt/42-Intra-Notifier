@@ -454,6 +454,7 @@ input[type="password"]:focus {
     margin-bottom: 10px;
     font-size: 16px;
     width: 100%;
+    color: var(--color);
 }
 
 input[type="text"]:enabled::placeholder,
@@ -546,7 +547,7 @@ button:disabled {
     cursor: pointer;
     height: 40px;
     width: 40px;
-    background: var(--button-color);
+    background: transparent;
     border-radius: 10px;
     border: solid 1px var(--border);
 }

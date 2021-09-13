@@ -57,13 +57,12 @@ function spawnWindow() {
             nativeWindowOpen: false,
             nodeIntegration: true,
             enableBlinkFeatures: "CSSColorSchemeUARendering",
-            contextIsolation: false
-                /*,
-                            devTools: false*/
+            contextIsolation: false,
+            devTools: false
         }
     })
     win.setMenu(null)
-        //app.dock.hide();
+    app.dock.hide();
     win.loadFile('./app/index.html')
     win.once('ready-to-show', async() => {
         win.show()

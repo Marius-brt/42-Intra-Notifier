@@ -83,6 +83,8 @@ ipcRenderer.on("user_data", (event, data) => {
     $('#points-card').text(data.user_data.points)
     $('#grade-card').text(data.user_data.grade)
     $('#level-card').text(data.user_data.level)
+    $('#profile-username').text(data.user_data.login)
+    $('#profile-avatar').attr('style', data.user_data.image);
 })
 
 ipcRenderer.on("user_data", (event, data) => {
