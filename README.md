@@ -1,7 +1,7 @@
 <p align="center">
 	<img src="https://raw.githubusercontent.com/Marius-brt/42-Intra-Notifier/2.0/logo.png"
 		alt="Logo"
-		style="height: 200px" />
+		style="height: 150px" />
 </p>
 
 # Intra Notifier
