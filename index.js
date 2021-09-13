@@ -21,6 +21,27 @@ var evaluations = {}
 var win = null
 var interval = null
 var password, username
+var titles = [
+    '🦖 Rwwrwwwr !',
+    "Beep beep boop 🤖",
+    "Hey! Did you remember?",
+    'Just a little reminder',
+    "🚨 Warning !! No I'm kidding.",
+    "Hey! Don't forget!",
+    "I hope you remember it!",
+    "I offer you this notif 🎁",
+    "Waaaawww 🏄‍♂️",
+    "You been hacked ! No just a reminder 😹",
+    "Are u alive ?",
+    "42 is life's answer?",
+    "You have some work!"
+]
+
+var newTitles = [
+    'New evaluation! Well done!',
+    'Tiene una nueva evaluación',
+    'A new evaluation has arrived 📨'
+]
 
 function spawnWindow() {
     win = new BrowserWindow({
@@ -37,12 +58,13 @@ function spawnWindow() {
             nodeIntegration: true,
             enableBlinkFeatures: "CSSColorSchemeUARendering",
             contextIsolation: false
+                /*,
+                            devTools: false*/
         }
     })
     win.setMenu(null)
         //app.dock.hide();
     win.loadFile('./app/index.html')
-        //win.loadURL("http://127.0.0.1:5500/app/index.html")
     win.once('ready-to-show', async() => {
         win.show()
         win.webContents.send("version", app.getVersion())
@@ -81,9 +103,19 @@ async function getUserData() {
         }
     }).get()
     var evals = $('.project-item.reminder').map((i, el) => {
+        var text = $(el).find('.project-item-text').text().replace(/[^\x20-\x7E]/g, '')
+        var html = ''
+        if (text.includes('by ')) {
+            var spl1 = text.split('by ')
+            var spl2 = spl1[1].split(' on')
+            spl2[0] = `<span class="evaluator"  onclick='require("electron").shell.openExternal("https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span>`
+            html = spl1[0] + spl2.join('')
+        } else {
+            html = text
+        }
         return {
             id: $(el).attr("data-scale-team"),
-            text: $(el).find('.project-item-text').text().replace(/[^\x20-\x7E]/g, ''),
+            text,
             time: Date.parse($(el).find("span[data-long-date]").attr("data-long-date")),
             first_notif: false,
             last_notif: false,
@@ -91,7 +123,8 @@ async function getUserData() {
             username: $(el).find("a[data-user-link]").attr("data-user-link"),
             url: $(el).find("a[data-user-link]").attr("href"),
             place: '',
-            image: ''
+            image: '',
+            html
         }
     }).get()
     await checkNotif(evals)
@@ -194,7 +227,7 @@ function evalNotif() {
                     Object.values(evaluations)[i].new_notif = true
                     Object.values(evaluations)[i].first_notif = true
                     Object.values(evaluations)[i].last_notif = true
-                    options.title = "Intra Notifier: Last reminder !"
+                    options.title = titles[Math.floor(Math.random() * titles.length)]
                     if (el.text.startsWith("You will evaluate")) {
                         options.subtitle = `You will evaluate ${el.username} in ${diffDate(endDate)}`
                         options.body = `place: ${el.place}`
@@ -206,7 +239,7 @@ function evalNotif() {
                 if (!el.first_notif && diff.minutes >= 4 && diff.minutes <= 14 && diff.hours == 0) {
                     Object.values(evaluations)[i].new_notif = true
                     Object.values(evaluations)[i].first_notif = true
-                    options.title = "Intra Notifier: Don't forget !"
+                    ptions.title = titles[Math.floor(Math.random() * titles.length)]
                     if (el.text.startsWith("You will evaluate")) {
                         options.subtitle = `You will evaluate ${el.username} in ${diffDate(endDate)}`
                         options.body = `place: ${el.place}`
@@ -217,7 +250,7 @@ function evalNotif() {
                 }
                 if (!el.new_notif && ((diff.minutes > 14 && diff.hours == 0) || diff.hours > 0)) {
                     Object.values(evaluations)[i].new_notif = true
-                    options.title = "Intra Notifier: New evaluation !"
+                    options.title = newTitles[Math.floor(Math.random() * newTitles.length)]
                     if (el.text.startsWith("You will evaluate")) {
                         options.subtitle = `You will evaluate someone in ${diffDate(endDate)}`
                     } else {
@@ -278,6 +311,7 @@ function getDiff(endDate) {
     minutes = minutes - (days * 24 * 60) - (hours * 60)
     seconds = seconds - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60)
     return {
+        days,
         seconds,
         minutes,
         hours
@@ -290,10 +324,14 @@ function diffDate(endDate) {
     if (endDate - today < 0) {
         return `few seconds`
     } else {
-        if (time.hours > 0 || time.minutes > 0) {
-            return `${time.hours > 0 ? time.hours + " hours " : ""}${time.minutes > 0 ? time.minutes + " mins " : ""}`
+        if (time.hours > 0 || time.minutes > 0 || time.days > 0) {
+            return `${time.days > 0 ? time.days + " days " : ""}${time.hours > 0 ? twoDigits(time.hours) + " hours " : ""}${time.minutes > 0 ? twoDigits(time.minutes) + " mins " : ""}`
         } else {
             return `${time.seconds} secs`
         }
     }
+}
+
+function twoDigits(nb) {
+    return ("0" + nb).slice(-2)
 }

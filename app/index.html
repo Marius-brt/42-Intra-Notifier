@@ -41,15 +41,17 @@
         <div class="login-img">
             <img src="./assets/images/42_logo.svg" class="logo_42">
         </div>
-        <p id="creator">Created by mbrouty and gdurand • Version <span id="version">1.0.0</span></p>
+        <p id="creator" class="noselect">Created by mbrouty and gdurand • Version <span id="version">1.0.0</span></p>
     </div>
     <div class="container" id="app">
         <div class="navbar">
-            <div class="profile">
-                <div id="profile-avatar" style="background-image: url(https://cdn.intra.42.fr/users/small_mbrouty.jpg)"></div>
-                <p id="profile-username">mbrouty</p>
-                <i class="fas fa-chevron-down"></i>
-                <div id="dropdown">
+            <div class="profile-container">
+                <div class="profile" onclick="dropdown()">
+                    <div id="profile-avatar" style="background-image: url(https://cdn.intra.42.fr/users/small_mbrouty.jpg)"></div>
+                    <p id="profile-username" class="noselect">mbrouty</p>
+                    <i class="fas arrow fa-chevron-down"></i>
+                </div>
+                <div id="dropdown" style="display: none;" class="noselect">
                     <ul>
                         <li onclick="settings(true)">Settings<i class="fas fa-cog"></i></li>
                         <li onclick="logout()">Logout<i class="fas fa-sign-out-alt"></i></li>
@@ -57,7 +59,7 @@
                 </div>
             </div>
         </div>
-        <div class="cards">
+        <div class="cards noselect">
             <div class="card">
                 <i class="fas fa-chart-line"></i>
                 <p>Grade</p>
@@ -83,15 +85,20 @@
                 <li class="event" data-date="15:30">
                     <h3>Evaluation</h3>
                     <p>You will be evaluated by <span class="evaluator">bsouleau</span> on C Piscine C 06</p>
+                    <p class="subtitle"></p>
                     <i class="far fa-clock"><p>15 mins</p></i>
                 </li>
                 <li class="event" data-date="15:45">
                     <h3>Correction</h3>
                     <p>You will evaluate somebody on C Piscine C 00</p>
+                    <p class="subtitle">place: z1r2p3</p>
                     <i class="far fa-clock"><p>30 mins</p></i>
                 </li>
             </ul>
         </div>
+        <a class="nav-link hrvbig" style="cursor: pointer; color: transparent;" onclick="yes()">
+			NE PAS CLIQUER
+        </a>
     </div>
     <div class="container" id="settings" style="display: none;">
         <div class="page-top-bar">
@@ -100,10 +107,31 @@
                 <i class="fas fa-arrow-left"></i>
             </div>
         </div>
-        <h3 style="margin-top: 100px;">Nothing here actually :(</h3>
-        <div style="position: absolute; bottom: 25px;">
-            <button style="width: 300px;" onclick='require("electron").shell.openExternal("https://github.com/Marius-brt/42-Intra-Notifier")'><i class="fab fa-github"></i>Github</button>
+        <div style="margin-top: 60px; width: 250px; text-align: center;" id="version-text">
+            <p>gg</p>
         </div>
+        <div style="position: absolute; bottom: 25px; flex-direction: column; display: flex;">
+            <button style="width: 300px;" onclick='require("electron").shell.openExternal("https://github.com/Marius-brt/42-Intra-Notifier")'><i class="fab fa-github"></i>Github</button>
+            <button style="width: 300px; margin-top: 10px;" onclick="sw(true)">✨ Generic</button>
+        </div>
+    </div>
+    <div class="star-wars-container" style="display: none;">
+        <div class="page-top-bar">
+            <div style="z-index: 155" class="icon-btn" onclick="sw(false)">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+        </div>
+        <section class="star-wars">
+            <div class="crawl noselect">
+                <div class="title">
+                    <p>Intra Notifier</p>
+                    <h1>THE CREATION OF THIS SOFTWARE</h1>
+                </div>
+
+                <p>This software is the result of a lot of boredom and passion for useless things. It was created during my pool at 42 Lyon. I hope that in real life it is a bit useful, a bit. If you like my work, you can star the project on Github. So you
+                    are still here ? If you are bored that much, you should know that there are easter eggs in this software. So have fun finding them. Good luck ! Oh and if there are bugs it's normal, bugs are fun, sometimes...</p>
+            </div>
+        </section>
     </div>
     <script>
         window.$ = window.jQuery = require('./assets/js/jquery-3.6.0.min.js');

@@ -34,8 +34,8 @@
         --card: #fff;
         --input: rgb(126, 126, 126);
         --input-bg: #fff;
-        --input-disabled-bg: #dfdfdf;
-        --input-disabled: rgb(124, 124, 124);
+        --input-disabled-bg: #dddddd;
+        --input-disabled: rgb(175, 175, 175);
         --button: #000;
         --button-color: #fff;
         --button-disabled: rgb(77, 77, 77);
@@ -47,6 +47,15 @@
         height: 200px;
         filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(116deg) brightness(91%) contrast(103%);
     }
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 body {
@@ -142,16 +151,29 @@ h3 {
     align-items: center;
 }
 
+.navbar .profile-container {
+    position: relative;
+    margin-right: 20px;
+    width: 180px;
+    height: 50px;
+}
+
 .navbar .profile {
     position: relative;
     background: var(--card);
     cursor: pointer;
     border-radius: 5px;
-    padding: 5px 15px 5px 5px;
+    height: 100%;
+    width: 100%;
     margin-right: 20px;
     display: flex;
     align-items: center;
     border: solid 1px var(--small-border);
+}
+
+.navbar .profile i.arrow {
+    position: absolute;
+    right: 15px;
 }
 
 #profile-username {
@@ -161,14 +183,16 @@ h3 {
 #profile-avatar {
     height: 40px;
     width: 40px;
+    margin-left: 5px;
     background-position: center;
     background-size: cover;
     border-radius: 5px;
 }
 
 #dropdown {
+    overflow: hidden;
     background: var(--card);
-    right: -1px;
+    right: -2px;
     width: 100%;
     top: 48px;
     border-radius: 0 0 5px 5px;
@@ -288,7 +312,13 @@ h3 {
 }
 
 .timeline p {
-    margin-bottom: 10px;
+    font-weight: 400;
+}
+
+.timeline .subtitle {
+    font-weight: 300;
+    margin-top: 0;
+    font-size: 14px;
 }
 
 .timeline .event {
@@ -312,13 +342,13 @@ h3 {
 }
 
 .timeline .event:before {
-    left: -217.5px;
+    left: -230px;
     content: attr(data-date);
     color: var(--p-color);
     text-align: right;
     font-weight: 100;
     font-size: 0.9em;
-    min-width: 120px;
+    min-width: 140px;
     font-family: 'Saira', sans-serif;
 }
 
@@ -336,19 +366,20 @@ h3 {
 .evaluator {
     font-weight: bold;
     cursor: pointer;
-    color: rgb(129, 188, 233);
+    color: var(--color);
     text-decoration: underline;
     transition: 0.2s;
+    padding: 0 1px;
 }
 
 .evaluator:hover {
-    background: rgb(129, 188, 233);
-    color: #fff;
-    padding: 0 1px;
+    background: var(--color);
+    color: var(--background);
     transition: 0.2s;
 }
 
 .event i {
+    margin-top: 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -497,6 +528,7 @@ button:disabled {
     justify-content: center;
     width: 100%;
     margin-top: 50px;
+    height: 61px;
 }
 
 .page-top-bar h1 {
@@ -640,3 +672,73 @@ input[type="checkbox"]:checked+label::before {
 
 
 /*END CHECKBOX*/
+
+
+/*STAR WARS*/
+
+.star-wars-container .icon-btn {
+    background: transparent !important;
+}
+
+.star-wars-container .icon-btn i {
+    color: #fff;
+}
+
+.star-wars {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    height: 800px;
+    color: #feda4a;
+    font-family: 'Pathway Gothic One', sans-serif;
+    font-size: 500%;
+    font-weight: 600;
+    letter-spacing: 6px;
+    line-height: 150%;
+    perspective: 400px;
+    text-align: justify;
+}
+
+.crawl {
+    position: relative;
+    top: 99999px;
+    transform-origin: 50% 100%;
+    animation: crawl 110s linear;
+}
+
+.crawl>.title {
+    font-size: 60px;
+    text-align: center;
+}
+
+.crawl>.title h1 {
+    color: #feda4a !important;
+    margin: 0 0 100px;
+    font-size: 120px;
+    text-transform: uppercase;
+}
+
+@keyframes crawl {
+    0% {
+        top: 120vh;
+        transform: rotateX(20deg) translateZ(0);
+    }
+    100% {
+        top: -6000px;
+        transform: rotateX(25deg) translateZ(-2500px);
+    }
+}
+
+.star-wars-container {
+    position: absolute;
+    background: #000;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 150;
+    overflow: hidden;
+}
+
+
+/*END STAR WARS*/
