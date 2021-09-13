@@ -16,7 +16,7 @@
     <div class="drag">
         <div class="drag-area" draggable="true"></div>
     </div>
-    <div class="container" id="login" style="display: none;">
+    <div class="container" id="login">
         <div id="loading" style="display: none;">
             <div class="lds-ring">
                 <div></div>
@@ -48,7 +48,7 @@
             <div class="profile-container">
                 <div class="profile" onclick="dropdown()">
                     <div id="profile-avatar"></div>
-                    <p id="profile-username" class="noselect"></p>
+                    <p id="profile-username" class="noselect">username</p>
                     <i class="fas arrow fa-chevron-down"></i>
                 </div>
                 <div id="dropdown" style="display: none;" class="noselect">
@@ -82,18 +82,7 @@
                 <p style="text-align: center;">No evaluation found :(</p>
             </div>
             <ul class="timeline" id="evaluations">
-                <li class="event" data-date="15:30">
-                    <h3>Evaluation</h3>
-                    <p>You will be evaluated by <span class="evaluator">bsouleau</span> on C Piscine C 06</p>
-                    <p class="subtitle"></p>
-                    <i class="far fa-clock"><p>15 mins</p></i>
-                </li>
-                <li class="event" data-date="15:45">
-                    <h3>Correction</h3>
-                    <p>You will evaluate somebody on C Piscine C 00</p>
-                    <p class="subtitle">place: z1r2p3</p>
-                    <i class="far fa-clock"><p>30 mins</p></i>
-                </li>
+
             </ul>
         </div>
         <a class="nav-link hrvbig" style="cursor: pointer; color: transparent;" onclick="yes()">

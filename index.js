@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Notification } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu, Notification } = require('electron')
 const puppeteer = require('puppeteer-core')
 const chrome = require('chrome-paths')
 const axios = require('axios')
@@ -14,6 +14,12 @@ app.on('ready', () => {
         process.platform == "linux" ? 1000 : 0
     )
 })
+
+const menuTemplate = [{
+    label: "File",
+    submenu: [{ role: 'quit' }]
+}];
+
 
 var cookies = null
 var cookieString = ''
@@ -50,8 +56,10 @@ function spawnWindow() {
         autoHideMenuBar: true,
         titleBarStyle: 'hidden',
         show: false,
-        minWidth: 900,
+        minWidth: 800,
         minHeight: 700,
+        maxHeight: 1000,
+        maxWidth: 1400,
         maximizable: false,
         webPreferences: {
             nativeWindowOpen: false,
@@ -61,8 +69,8 @@ function spawnWindow() {
             devTools: false
         }
     })
-    win.setMenu(null)
-    app.dock.hide();
+    const menu = Menu.buildFromTemplate(menuTemplate);
+    Menu.setApplicationMenu(menu);
     win.loadFile('./app/index.html')
     win.once('ready-to-show', async() => {
         win.show()
