@@ -8,6 +8,17 @@
 
 Intra Notifier is a software that allows you to be notified when you have a new evaluation and also to have a reminder 15 minutes and 4 minutes before it.
 
+<img src="https://raw.githubusercontent.com/Marius-brt/42-Intra-Notifier/2.0/app_screen.png"
+		alt="Screen"
+		style="height: 300px;"/>
+
+## Features
+
+- Dark and Light theme
+- Be notified when you have an evaluation
+- Show stats on dashboard (level, grade, evaluation points)
+- Easter Eggs (best feature I know)
+
 ## How to install ?
 
 Go to [release](https://github.com/Marius-brt/42-Intra-Notifier/releases) and choose the latest version corresponding to the OS of your machine (I guess MacOS ?) and click on NAME_OF_VERSION.zip.
@@ -15,10 +26,6 @@ Go to [release](https://github.com/Marius-brt/42-Intra-Notifier/releases) and ch
 > **Google Chrome need to be installed** : If not, install it from the software on your Mac called "*Managed Software Center*".
 
 ## How to use it ?
-
-<img src="https://raw.githubusercontent.com/Marius-brt/42-Intra-Notifier/2.0/app_screen.png"
-		alt="Screen"
-		style="height: 400px;"/>
 
 You have to unzip the file then open Intra Notifier (in your download folder normally). Enter your Intra username and password then click on Login. You can minimize the application but do not click on the red cross. When you want to stop receiving notifications, just click close the app.
 
