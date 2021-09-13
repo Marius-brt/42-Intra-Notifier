@@ -35,4 +35,5 @@ In order to finish the project quickly, I decided to use [Electron](https://gith
 
 ## About 
 
-If you like the project, you can star this repository. If you have an idea to add to the prjoect, feel free to send it in [Issues](https://github.com/Marius-brt/42-Intra-Notifier/issues)
+If you like the project, you can star this repository. If you find a bug or have an idea of a feature to add, you can say it in [Discussions](https://github.com/Marius-brt/42-Intra-Notifier/discussions) or in [Issues](https://github.com/Marius-brt/42-Intra-Notifier/issues)
+
