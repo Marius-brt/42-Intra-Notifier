@@ -28,9 +28,6 @@
         "mac": {
             "category": "intra.notifier.tool",
             "icon": "logo.png"
-        },
-        "win": {
-            "icon": "logo_win.png"
         }
     }
 }
