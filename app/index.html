@@ -29,7 +29,7 @@
             <div style="width: 300px;">
                 <h1>Let's log you in.</h1>
                 <h2>Enter your Intra information</h2>
-                <input type="text" id="username" placeholder="Username">
+                <input type="text" spellcheck="false" id="username" placeholder="Username">
                 <input type="password" id="password" placeholder="Password">
                 <input type="checkbox" id="stay_logged" checked>
                 <label for="stay_logged">Stay logged ?</label>
@@ -43,12 +43,12 @@
         </div>
         <p id="creator" class="noselect">Created by mbrouty and gdurand • Version <span id="version">1.0.0</span></p>
     </div>
-    <div class="container" id="app">
+    <div class="container" id="app" style="display: none;">
         <div class="navbar">
             <div class="profile-container">
                 <div class="profile" onclick="dropdown()">
-                    <div id="profile-avatar" style="background-image: url(https://cdn.intra.42.fr/users/small_mbrouty.jpg)"></div>
-                    <p id="profile-username" class="noselect">mbrouty</p>
+                    <div id="profile-avatar"></div>
+                    <p id="profile-username" class="noselect"></p>
                     <i class="fas arrow fa-chevron-down"></i>
                 </div>
                 <div id="dropdown" style="display: none;" class="noselect">
