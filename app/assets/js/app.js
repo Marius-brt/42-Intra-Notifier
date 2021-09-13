@@ -3,6 +3,7 @@ const { ipcRenderer } = require('electron')
 var drop = false
 $('#app').hide()
 $('#login').show()
+var audio = new Audio('./assets/images/star-wars-intro-hd-1080p.mp3');
 
 function settings(value) {
     if (value) {
@@ -29,9 +30,12 @@ function sw(val) {
     if (val) {
         $('#settings').hide()
         $(".star-wars-container").fadeIn("slow");
+        audio.play();
     } else {
         $('#settings').show()
         $('.star-wars-container').hide()
+        audio.pause();
+        audio.currentTime = 0;
     }
 }
 

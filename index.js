@@ -230,33 +230,35 @@ function evalNotif() {
                     silent: true,
                     timeoutType: 'never'
                 }
-                if (!el.last_notif && diff.minutes < 4 && diff.hours == 0) {
-                    Object.values(evaluations)[i].new_notif = true
-                    Object.values(evaluations)[i].first_notif = true
-                    Object.values(evaluations)[i].last_notif = true
-                    options.title = titles[Math.floor(Math.random() * titles.length)]
-                    if (el.text.startsWith("You will evaluate")) {
-                        options.subtitle = `You will evaluate ${el.username} in ${diffDate(endDate)}`
-                        options.body = `place: ${el.place}`
-                    } else {
-                        options.subtitle = `You will be evaluated by ${el.username} in ${diffDate(endDate)}`
+                if (diff.hours == 0 && diff.days == 0) {
+                    if (!el.last_notif && diff.minutes < 4) {
+                        evaluations[el.id].new_notif = true
+                        evaluations[el.id].first_notif = true
+                        evaluations[el.id].last_notif = true
+                        options.title = titles[Math.floor(Math.random() * titles.length)]
+                        if (el.text.startsWith("You will evaluate")) {
+                            options.subtitle = `You will evaluate ${el.username} in ${diffDate(endDate)}`
+                            options.body = `place: ${el.place}`
+                        } else {
+                            options.subtitle = `You will be evaluated by ${el.username} in ${diffDate(endDate)}`
+                        }
+                        new Notification(options).show()
                     }
-                    new Notification(options).show()
-                }
-                if (!el.first_notif && diff.minutes >= 4 && diff.minutes <= 14 && diff.hours == 0) {
-                    Object.values(evaluations)[i].new_notif = true
-                    Object.values(evaluations)[i].first_notif = true
-                    ptions.title = titles[Math.floor(Math.random() * titles.length)]
-                    if (el.text.startsWith("You will evaluate")) {
-                        options.subtitle = `You will evaluate ${el.username} in ${diffDate(endDate)}`
-                        options.body = `place: ${el.place}`
-                    } else {
-                        options.subtitle = `You will be evaluated by ${el.username} in ${diffDate(endDate)}`
+                    if (!el.first_notif && diff.minutes >= 4 && diff.minutes <= 14) {
+                        evaluations[el.id].new_notif = true
+                        evaluations[el.id].first_notif = true
+                        options.title = titles[Math.floor(Math.random() * titles.length)]
+                        if (el.text.startsWith("You will evaluate")) {
+                            options.subtitle = `You will evaluate ${el.username} in ${diffDate(endDate)}`
+                            options.body = `place: ${el.place}`
+                        } else {
+                            options.subtitle = `You will be evaluated by ${el.username} in ${diffDate(endDate)}`
+                        }
+                        new Notification(options).show()
                     }
-                    new Notification(options).show()
                 }
-                if (!el.new_notif && ((diff.minutes > 14 && diff.hours == 0) || diff.hours > 0)) {
-                    Object.values(evaluations)[i].new_notif = true
+                if (!el.new_notif && ((diff.minutes > 14 && diff.hours == 0) || diff.hours > 0 || diff.days > 0)) {
+                    evaluations[el.id].new_notif = true
                     options.title = newTitles[Math.floor(Math.random() * newTitles.length)]
                     if (el.text.startsWith("You will evaluate")) {
                         options.subtitle = `You will evaluate someone in ${diffDate(endDate)}`
