@@ -26,6 +26,12 @@ function dropdown() {
     }
 }
 
+$('#password').on('keypress', function(e) {
+    if (e.which === 13) {
+        login()
+    }
+});
+
 function sw(val) {
     if (val) {
         $('#settings').hide()

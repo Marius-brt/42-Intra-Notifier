@@ -6,6 +6,7 @@
         --timeline-bg: rgba(255, 255, 255, 0.05);
         --p-color: rgba(255, 255, 255, 0.8);
         --border: #dfdfdf;
+        --dash: #dfdfdf70;
         --card: rgb(37 37 43);
         --input: #6b6a73;
         --input-bg: #1e1d25;
@@ -31,6 +32,7 @@
         --timeline-bg: rgba(94, 94, 94, 0.05);
         --p-color: rgba(45, 45, 45, 0.8);
         --border: #636363;
+        --dash: #63636374;
         --card: #fff;
         --input: rgb(126, 126, 126);
         --input-bg: #fff;
@@ -322,7 +324,7 @@ h3 {
 }
 
 .timeline .event {
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    border-bottom: 1px dashed var(--dash);
     padding-bottom: 25px;
     margin-bottom: 50px;
     position: relative;

@@ -1,6 +1,6 @@
 {
     "name": "intra-notifier",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "Intra Notifier dont fucking forget ur evaluation",
     "main": "index.js",
     "scripts": {
