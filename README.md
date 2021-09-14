@@ -10,7 +10,7 @@ Intra Notifier is a software that allows you to be notified when you have a new 
 
 <img src="https://raw.githubusercontent.com/Marius-brt/42-Intra-Notifier/2.0/app_screen.png"
 		alt="Screen"
-		style="height: 300px;"/>
+		style="width:100%;"/>
 
 ## Features
 
