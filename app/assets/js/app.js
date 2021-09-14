@@ -91,7 +91,6 @@ ipcRenderer.on("settings", (event, data) => {
 })
 
 ipcRenderer.on("user_data", (event, data) => {
-    console.log(data)
     var evals = Object.values(data.evaluations)
     $("#evaluations").empty()
 
