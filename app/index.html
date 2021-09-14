@@ -63,6 +63,16 @@
                 </div>
             </div>
         </div>
+        <div id="update-popup" style="display: none;">
+            <div class="popup">
+                <h2>🚨 New version available!</h2>
+                <p id="popup-text">New version available</p>
+                <div class="popup-btns">
+                    <button onclick="$('#update-popup').hide()">Close</button>
+                    <button onclick="$('#update-popup').hide();ipcRenderer.send('open', 'https://github.com/Marius-brt/42-Intra-Notifier/releases')"><i class="fas fa-download"></i>Download</button>
+                </div>
+            </div>
+        </div>
         <div class="cards noselect">
             <div class="card">
                 <i class="fas fa-chart-line"></i>

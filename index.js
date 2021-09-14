@@ -21,7 +21,7 @@ const menuTemplate = [{
     submenu: [{ role: 'quit' }]
 }];
 
-
+var newCount = 0
 var cookies = null
 var cookieString = ''
 var evaluations = {}
@@ -39,7 +39,7 @@ var titles = [
     "I offer you this notif 🎁",
     "Waaaawww 🏄‍♂️",
     "You been hacked ! No just a reminder 😹",
-    "Are u alive ?",
+    "Are u alive?",
     "42 is life's answer?",
     "You have some work!"
 ]
@@ -47,7 +47,9 @@ var titles = [
 var newTitles = [
     'New evaluation! Well done!',
     'Tiene una nueva evaluación',
-    'A new evaluation has arrived 📨'
+    'A new evaluation has arrived 📨',
+    'Go Go Gadget new evaluation! 🦸',
+    'A new evaluation you have. 🐲'
 ]
 
 function spawnWindow() {
@@ -73,9 +75,14 @@ function spawnWindow() {
     const menu = Menu.buildFromTemplate(menuTemplate);
     Menu.setApplicationMenu(menu);
     win.loadFile('./app/index.html')
+    win.on('focus', () => {
+        newCount = 0
+        app.setBadgeCount(0)
+    })
     win.once('ready-to-show', async() => {
         win.show()
         win.webContents.send("version", app.getVersion())
+        app.setBadgeCount(0)
         if (store.get('notif_sound') == undefined) {
             store.set('notif_sound', true)
         }
@@ -118,23 +125,23 @@ async function getUserData() {
         }
     }).get()
     var evals = $('.project-item.reminder').map((i, el) => {
-        var text = $(el).find('.project-item-text').text().replace(/[^\x20-\x7E]/g, '')
+        var text = $(el).find('.project-item-text').text().replace(/<\/?[^>]+(>|$)/g, " ").replace(/[^\x20-\x7E]/g, '').replace(/\s\s+/g, ' ')
         var html = ''
         if (text.startsWith("You will evaluate")) {
             if (text.includes('someone')) {
                 html = text
             } else {
                 var spl1 = text.split('evaluate ')
-                var spl2 = spl1[1].split(' on')
-                spl2[0] = `evaluate <span class="evaluator" onclick='ipcRenderer.send("open", "https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span> on`
-                html = spl1[0] + spl2.join('')
+                var spl2 = splitOnce(spl1[1], ' ')
+                spl2[0] = `evaluate <span class="evaluator" onclick='ipcRenderer.send("open", "https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span> `
+                html = spl1[0] + spl2[0] + spl2[1]
             }
         } else {
             if (text.includes('by ')) {
                 var spl1 = text.split('by ')
-                var spl2 = spl1[1].split(' on')
-                spl2[0] = `by <span class="evaluator" onclick='ipcRenderer.send("open", "https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span> on`
-                html = spl1[0] + spl2.join('')
+                var spl2 = splitOnce(spl1[1], ' ')
+                spl2[0] = `by <span class="evaluator" onclick='ipcRenderer.send("open", "https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span> `
+                html = spl1[0] + spl2[0] + spl2[1]
             } else {
                 html = text
             }
@@ -208,6 +215,7 @@ async function checkNotif(evals) {
     for (const el of evals) {
         if (evaluations[el.id] == undefined) {
             evaluations[el.id] = el
+            newCount++
             if (el.url != undefined && el.username != undefined) {
                 var userHtml = await request(el.url)
                 var p = cheerio.load(userHtml)
@@ -231,6 +239,9 @@ async function checkNotif(evals) {
             })) {
             delete evaluations[key]
         }
+    }
+    if (win.isMinimized()) {
+        app.setBadgeCount(newCount)
     }
     evalNotif()
 }
@@ -372,4 +383,9 @@ function diffDate(endDate) {
 
 function twoDigits(nb) {
     return ("0" + nb).slice(-2)
+}
+
+function splitOnce(s, on) {
+    [first, ...rest] = s.split(on)
+    return [first, rest.length > 0 ? rest.join(on) : null]
 }

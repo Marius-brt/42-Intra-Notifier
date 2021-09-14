@@ -70,6 +70,8 @@ ipcRenderer.on("version", (event, data) => {
         .then(response => response.text())
         .then(version => {
             if (parseInt(version.replace(/\./g, "")) > parseInt(data.replace(/\./g, ""))) {
+                $('#update-popup').show()
+                $('#popup-text').text(`Ahah it looks like there is a new version (we know you love updates 😅). You are currently on version ${data}. The latest version is ${version}`)
                 $('#version-text p').text('New version available!')
                 $('#version-text').append(`<button style="margin-top: 15px;" onclick='require("electron").shell.openExternal("https://github.com/Marius-brt/42-Intra-Notifier/releases")'>Download last version</button>`)
             } else {
@@ -89,6 +91,7 @@ ipcRenderer.on("settings", (event, data) => {
 })
 
 ipcRenderer.on("user_data", (event, data) => {
+    console.log(data)
     var evals = Object.values(data.evaluations)
     $("#evaluations").empty()
 
