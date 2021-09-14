@@ -1,6 +1,6 @@
 {
     "name": "intra-notifier",
-    "version": "2.1.3",
+    "version": "2.1.5",
     "description": "Intra Notifier dont fucking forget ur evaluation",
     "main": "index.js",
     "scripts": {
@@ -20,6 +20,7 @@
         "chrome-paths": "^1.0.1",
         "crypto": "^1.0.1",
         "electron-store": "^8.0.0",
+        "open": "^8.2.1",
         "puppeteer-core": "^10.2.0"
     },
     "build": {

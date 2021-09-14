@@ -4,6 +4,7 @@ var drop = false
 $('#app').hide()
 $('#login').show()
 var audio = new Audio('./assets/images/star-wars-intro-hd-1080p.mp3');
+var evalsTime = []
 
 function settings(value) {
     if (value) {
@@ -20,7 +21,6 @@ $(document).on("click", (e) => {
     if (!$(e.target).hasClass('profile') && $(e.target).parent('.profile').length == 0 && drop) {
         dropdown()
     }
-
 })
 
 $('.profile').on("click", () => {
@@ -103,8 +103,12 @@ ipcRenderer.on("user_data", (event, data) => {
     evals = evals.sort((a, b) => {
         return new Date(a.time) - new Date(b.time)
     })
-
+    evalsTime = []
     evals.forEach(el => {
+        evalsTime.push({
+            id: el.id + "-time",
+            time: el.time
+        })
         var date = new Date(el.time)
         $("#evaluations").append(`
 			<li class="event noselect" data-date="${twoDigits(date.getHours())}:${twoDigits(date.getMinutes())}">
@@ -112,7 +116,7 @@ ipcRenderer.on("user_data", (event, data) => {
 				<h3>${el.text.startsWith("You will evaluate") ? "Correction" : "Evaluation"}</h3>
 				<p>${el.html}</p>
 				<p class="subtitle">${el.text.startsWith("You will evaluate") && el.place ? 'place: ' + el.place : ''}</p>
-				<i class="far fa-clock"><p>${diffDate(date)}</p></i>
+				<i class="far fa-clock"><p id="${el.id + "-time"}">${diffDate(date)}</p></i>
 			</li>`)
     })
     $('#points-card').text(data.user_data.points)
@@ -120,6 +124,9 @@ ipcRenderer.on("user_data", (event, data) => {
     $('#level-card').text(data.user_data.level)
     $('#profile-username').text(data.user_data.login)
     $('#profile-avatar').attr('style', data.user_data.image);
+    $('#settings-name').text(data.user_data.name)
+    $('#settings-login').text(data.user_data.login)
+    $('#settings-img').attr('style', data.user_data.image);
 })
 
 ipcRenderer.on("logged", (event, data) => {
@@ -190,10 +197,10 @@ function diffDate(endDate) {
     const today = new Date()
     const time = getDiff(endDate)
     if (endDate - today < 0) {
-        return `few seconds`
+        return `few seconds ago`
     } else {
         if (time.hours > 0 || time.minutes > 0 || time.days > 0) {
-            return `${time.days > 0 ? time.days + " days " : ""}${time.hours > 0 ? twoDigits(time.hours) + " hours " : ""}${time.minutes > 0 ? twoDigits(time.minutes) + " mins " : ""}`
+            return `${time.days > 0 ? time.days + " days " : ""}${time.hours > 0 ? twoDigits(time.hours) + " hours " : ""}${time.minutes > 0 ? twoDigits(time.minutes) + " mins " : ""} ${time.seconds} secs`
         } else {
             return `${time.seconds} secs`
         }
@@ -203,6 +210,13 @@ function diffDate(endDate) {
 function twoDigits(nb) {
     return ("0" + nb).slice(-2)
 }
+
+window.setInterval(() => {
+    evalsTime.forEach(el => {
+        var dt = new Date(el.time)
+        $("#" + el.id).text(diffDate(dt))
+    })
+}, 1000);
 
 function yes() {
     function c() {

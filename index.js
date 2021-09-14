@@ -5,6 +5,7 @@ const axios = require('axios')
 const Store = require('electron-store')
 const cheerio = require('cheerio')
 const crypto = require('./src/crypto')
+const open = require('open')
 const store = new Store()
 
 app.commandLine.appendSwitch("enable-transparent-visuals")
@@ -125,14 +126,14 @@ async function getUserData() {
             } else {
                 var spl1 = text.split('evaluate ')
                 var spl2 = spl1[1].split(' on')
-                spl2[0] = `<span class="evaluator" onclick='require("electron").shell.openExternal("https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span>`
+                spl2[0] = `evaluate <span class="evaluator" onclick='ipcRenderer.send("open", "https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span> on`
                 html = spl1[0] + spl2.join('')
             }
         } else {
             if (text.includes('by ')) {
                 var spl1 = text.split('by ')
                 var spl2 = spl1[1].split(' on')
-                spl2[0] = `<span class="evaluator" onclick='require("electron").shell.openExternal("https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span>`
+                spl2[0] = `by <span class="evaluator" onclick='ipcRenderer.send("open", "https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span> on`
                 html = spl1[0] + spl2.join('')
             } else {
                 html = text
@@ -235,6 +236,7 @@ async function checkNotif(evals) {
 }
 
 function evalNotif() {
+    var ni = 0
     var evals = Object.values(evaluations).sort((a, b) => {
         return new Date(a.time) - new Date(b.time)
     })
@@ -285,10 +287,15 @@ function evalNotif() {
                     }
                     new Notification(options).show()
                 }
-            }, i * 5000)
+            }, ni * 5000)
+            ni++
         }
     })
 }
+
+ipcMain.on("open", async(event, args) => {
+    open(args)
+})
 
 ipcMain.on("login", async(event, args) => {
     if (args.username != '' && args.password != '') {
@@ -353,7 +360,7 @@ function diffDate(endDate) {
     const today = new Date()
     const time = getDiff(endDate)
     if (endDate - today < 0) {
-        return `few seconds`
+        return `few seconds ago`
     } else {
         if (time.hours > 0 || time.minutes > 0 || time.days > 0) {
             return `${time.days > 0 ? time.days + " days " : ""}${time.hours > 0 ? twoDigits(time.hours) + " hours " : ""}${time.minutes > 0 ? twoDigits(time.minutes) + " mins " : ""}`
