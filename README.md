@@ -3,10 +3,10 @@
 		alt="Logo"
 		style="height: 150px" />
 </p>
-<div style="width:100%;display:flex;align-items:center">
+<p align="center">
 	<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/Marius-brt/42-intra-notifier/total?style=flat-square">
 	<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/Marius-brt/42-intra-notifier?style=flat-square">
-</div>
+</p>
 
 # Intra Notifier
 
