@@ -166,6 +166,40 @@ h3 {
     -webkit-app-region: drag;
 }
 
+.bar-container {
+    height: 80px;
+    width: 95%;
+    box-sizing: border-box;
+    padding: 0 15px;
+    box-shadow: 0px 0px 50px -3px rgba(0, 0, 0, 0.1);
+}
+
+.bar-container .bar-bg {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
+    background: var(--card);
+}
+
+.bar {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    background: rgb(141, 250, 107);
+    height: 100%;
+}
+
+.bar-container .bar-bg p {
+    z-index: 2;
+    font-size: 14px;
+    font-weight: 500;
+}
+
 
 /*NAVBAR*/
 
@@ -242,7 +276,7 @@ h3 {
     background: var(--card);
     right: -2px;
     width: 100%;
-    top: 55px;
+    top: 58px;
     border-radius: 0 0 5px 5px;
     position: absolute;
     border-bottom: solid 1px var(--small-border);
@@ -260,9 +294,12 @@ h3 {
 #dropdown li {
     padding: 10px 0;
     padding-right: 15px;
-    border-top: solid 1px var(--small-border);
     text-align: left;
     cursor: pointer;
+}
+
+#dropdown li:not(:first-child) {
+    border-top: solid 1px var(--small-border);
 }
 
 #dropdown li:hover {
@@ -280,7 +317,7 @@ h3 {
 /*CARDS*/
 
 .cards {
-    margin-bottom: 50px;
+    margin-bottom: 20px;
     margin-top: 50px;
     width: 95%;
     display: grid;

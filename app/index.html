@@ -69,7 +69,7 @@
                 <p id="popup-text">New version available</p>
                 <div class="popup-btns">
                     <button onclick="$('#update-popup').hide()">Close</button>
-                    <button onclick="$('#update-popup').hide();ipcRenderer.send('open', 'https://github.com/Marius-brt/42-Intra-Notifier/releases')"><i class="fas fa-download"></i>Download</button>
+                    <button onclick="download()"><i class="fas fa-download"></i>Download</button>
                 </div>
             </div>
         </div>
@@ -91,6 +91,12 @@
                 <p>Evaluation points</p>
                 <h2 id="points-card">6</h2>
                 <div class="bg"></div>
+            </div>
+        </div>
+        <div class="bar-container" style="margin-bottom: 30px;">
+            <div class="bar-bg">
+                <div id="bar" class="bar" style="width:0%"></div>
+                <p id="logtime-text">00</p>
             </div>
         </div>
         <div id="timeline-content" style="width: 90%;">
