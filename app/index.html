@@ -45,7 +45,7 @@
     </div>
     <div class="container" id="app" style="display: none;">
         <div class="navbar">
-            <div class="nav-left">
+            <div class="nav-left noselect">
                 <img src="assets/images/42_logo.svg">
                 <p>Intra Notifier</p>
             </div>
@@ -131,12 +131,20 @@
             <h2 id="settings-name">Marius Brouty</h2>
         </div>
         <hr>
-        <div style="margin-top: 20px; width: 250px; text-align: center;" id="version-text">
-            <p>gg</p>
+        <div class="settings-container">
+            <div class="scroll-area">
+                <div style="margin-top: 20px; width: 250px; text-align: center;" id="version-text">
+                    <p>gg</p>
+                </div>
+                <input type="checkbox" id="notif-sound" checked>
+                <label for="notif-sound" style="margin-top: 20px;">Notification sound</label>
+                <input type="checkbox" id="notif-mobile" checked>
+                <label for="notif-mobile" style="margin-top: 20px;">Mobile notification</label>
+                <input type="text" id="mobile-master-key" style="width: 300px; margin-top: 20px;" placeholder="IFTTT Master Key">
+                <span style="cursor: pointer; text-decoration: underline; margin-top: 10px;" onclick='ipcRenderer.send("open", "https://github.com/Marius-brt/42-Intra-Notifier/blob/2.0/mobile-notif.md")'>How to use mobile notif ?</span>
+            </div>
         </div>
-        <input type="checkbox" id="notif-sound" checked>
-        <label for="notif-sound" style="margin-top: 20px;">Notification sound</label>
-        <div style="position: absolute; bottom: 25px; display: flex; align-items: center;">
+        <div class="settings-btns">
             <button style="width: 300px; margin-right: 8px;" onclick='ipcRenderer.send("open", "https://github.com/Marius-brt/42-Intra-Notifier")'><i class="fab fa-github"></i>Github</button>
             <button style="width: 300px; margin-left: 8px;" onclick="sw(true)">✨ Generic</button>
         </div>

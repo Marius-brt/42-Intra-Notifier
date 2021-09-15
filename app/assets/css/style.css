@@ -822,6 +822,17 @@ input[type="checkbox"]:checked+label::before {
     text-align: center;
 }
 
+.settings-btns {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 25px 0;
+    background: linear-gradient(180deg, rgba(107, 112, 250, 0) 50%, var(--background) 100%);
+}
+
 .settings-profile div {
     box-shadow: 0px 0px 50px -3px rgba(0, 0, 0, 0.3);
     margin-bottom: 15px;
@@ -840,6 +851,20 @@ input[type="checkbox"]:checked+label::before {
 .settings-profile h2 {
     margin-top: -5px;
     color: var(--color);
+}
+
+.settings-container {
+    height: 40%;
+    overflow-y: auto;
+    padding-bottom: 100px;
+    box-sizing: border-box;
+    width: 500px;
+}
+
+.settings-container .scroll-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 

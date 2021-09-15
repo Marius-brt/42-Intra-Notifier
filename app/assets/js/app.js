@@ -3,6 +3,7 @@ const { ipcRenderer } = require("electron");
 var drop = false;
 $("#app").hide();
 $("#login").show();
+$("#settings").hide();
 var audio = new Audio("./assets/images/star-wars-intro-hd-1080p.mp3");
 var evalsTime = [];
 
@@ -46,6 +47,20 @@ $("#notif-sound").change(() => {
     ipcRenderer.send("set_setting", {
         name: "notif_sound",
         value: $("#notif-sound").is(":checked"),
+    });
+});
+
+$("#notif-mobile").change(() => {
+    ipcRenderer.send("set_setting", {
+        name: "notif_mobile",
+        value: $("#notif-mobile").is(":checked"),
+    });
+});
+
+$("#mobile-master-key").on("keyup", () => {
+    ipcRenderer.send("set_setting", {
+        name: "master_key",
+        value: $("#mobile-master-key").val(),
     });
 });
 
@@ -107,6 +122,8 @@ ipcRenderer.on("init_data", (event, data) => {
 
 ipcRenderer.on("settings", (event, data) => {
     $("#notif-sound").prop("checked", data.notif_sound);
+    $("#notif-mobile").prop("checked", data.notif_mobile);
+    $("#mobile-master-key").val(data.master_key)
 });
 
 function getLastSunday() {

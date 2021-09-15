@@ -7,17 +7,76 @@ const cheerio = require("cheerio");
 const crypto = require("./src/crypto");
 const open = require("open");
 const store = new Store();
+const iftt_webhooks = require('ifttt-webhooks')
 
 app.commandLine.appendSwitch("enable-transparent-visuals");
 app.on("ready", () => {
     setTimeout(spawnWindow, process.platform == "linux" ? 1000 : 0);
 });
 
-const menuTemplate = [{
-    label: "File",
-    submenu: [{ role: "quit" }],
-}, ];
+const application = {
+    label: "Application",
+    submenu: [{
+            label: "About Application",
+            selector: "orderFrontStandardAboutPanel:"
+        },
+        {
+            type: "separator"
+        },
+        {
+            label: "Quit",
+            accelerator: "Command+Q",
+            click: () => {
+                app.quit()
+            }
+        }
+    ]
+}
 
+const edit = {
+    label: "Edit",
+    submenu: [{
+            label: "Undo",
+            accelerator: "CmdOrCtrl+Z",
+            selector: "undo:"
+        },
+        {
+            label: "Redo",
+            accelerator: "Shift+CmdOrCtrl+Z",
+            selector: "redo:"
+        },
+        {
+            type: "separator"
+        },
+        {
+            label: "Cut",
+            accelerator: "CmdOrCtrl+X",
+            selector: "cut:"
+        },
+        {
+            label: "Copy",
+            accelerator: "CmdOrCtrl+C",
+            selector: "copy:"
+        },
+        {
+            label: "Paste",
+            accelerator: "CmdOrCtrl+V",
+            selector: "paste:"
+        },
+        {
+            label: "Select All",
+            accelerator: "CmdOrCtrl+A",
+            selector: "selectAll:"
+        }
+    ]
+}
+
+const template = [
+    application,
+    edit
+]
+
+var ifttt = null
 var newCount = 0;
 var cookies = null;
 var cookieString = "";
@@ -66,10 +125,10 @@ function spawnWindow() {
             nodeIntegration: true,
             enableBlinkFeatures: "CSSColorSchemeUARendering",
             contextIsolation: false,
-            devTools: false,
+            devTools: false
         },
     });
-    const menu = Menu.buildFromTemplate(menuTemplate);
+    const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
     win.loadFile("./app/index.html");
     win.on("focus", () => {
@@ -84,14 +143,23 @@ function spawnWindow() {
         if (store.get("notif_sound") == undefined) {
             store.set("notif_sound", true);
         }
+        if (store.get("notif_mobile") == undefined) {
+            store.set("notif_mobile", false);
+        }
+        if (store.get("master_key") == undefined) {
+            store.set("master_key", '');
+        }
         win.webContents.send("settings", {
             notif_sound: store.get("notif_sound"),
+            notif_mobile: store.get("notif_mobile"),
+            master_key: store.get("master_key")
         });
         if (store.get("username") && store.get("password")) {
             win.webContents.send("init_data", {
                 username: store.get("username"),
                 password: crypto.decrypt(store.get("password")),
                 notif_sound: store.get("notif_sound"),
+                master_key: store.get("master_key")
             });
             username = store.get("username");
             password = crypto.decrypt(store.get("password"));
@@ -194,6 +262,10 @@ async function getUserData() {
         evaluations,
         logtimes
     };
+}
+
+function mobileEnable() {
+    return store.get("notif_mobile") && store.get("master_key") && store.get("notif_mobile") != '' && store.get("master_key") != ''
 }
 
 async function getCookies() {
@@ -316,14 +388,13 @@ function evalNotif() {
                         evaluations[el.id].last_notif = true;
                         options.title = titles[Math.floor(Math.random() * titles.length)];
                         if (el.text.startsWith("You will evaluate")) {
-                            options.subtitle = `You will evaluate ${
-                el.username
-              } in ${diffDate(endDate)}`;
+                            options.subtitle = `You will evaluate ${el.username} in ${diffDate(endDate)}`;
                             options.body = `place: ${el.place}`;
                         } else {
-                            options.subtitle = `You will be evaluated by ${
-                el.username
-              } in ${diffDate(endDate)}`;
+                            options.subtitle = `You will be evaluated by ${el.username} in ${diffDate(endDate)}`;
+                        }
+                        if (mobileEnable()) {
+                            ifttt.trigger('eval', { "value1": options.subtitle })
                         }
                         new Notification(options).show();
                     }
@@ -332,14 +403,13 @@ function evalNotif() {
                         evaluations[el.id].first_notif = true;
                         options.title = titles[Math.floor(Math.random() * titles.length)];
                         if (el.text.startsWith("You will evaluate")) {
-                            options.subtitle = `You will evaluate ${
-                el.username
-              } in ${diffDate(endDate)}`;
+                            options.subtitle = `You will evaluate ${el.username} in ${diffDate(endDate)}`;
                             options.body = `place: ${el.place}`;
                         } else {
-                            options.subtitle = `You will be evaluated by ${
-                el.username
-              } in ${diffDate(endDate)}`;
+                            options.subtitle = `You will be evaluated by ${el.username} in ${diffDate(endDate)}`;
+                        }
+                        if (mobileEnable()) {
+                            ifttt.trigger('eval', { "value1": options.subtitle })
                         }
                         new Notification(options).show();
                     }
@@ -350,14 +420,14 @@ function evalNotif() {
                         diff.days > 0)
                 ) {
                     evaluations[el.id].new_notif = true;
-                    options.title =
-                        newTitles[Math.floor(Math.random() * newTitles.length)];
+                    options.title = newTitles[Math.floor(Math.random() * newTitles.length)];
                     if (el.text.startsWith("You will evaluate")) {
-                        options.subtitle = `You will evaluate someone in ${diffDate(
-              endDate
-            )}`;
+                        options.subtitle = `You will evaluate someone in ${diffDate(endDate)}`;
                     } else {
                         options.subtitle = `You will be evaluated in ${diffDate(endDate)}`;
+                    }
+                    if (mobileEnable()) {
+                        ifttt.trigger('eval', { "value1": options.subtitle })
                     }
                     new Notification(options).show();
                 }
@@ -406,7 +476,15 @@ ipcMain.on("logout", async(event, args) => {
 });
 
 ipcMain.on("set_setting", (event, args) => {
-    store.set(args.name, args.value);
+    if (args.name == "master_key") {
+        store.set(args.name, args.value.replace('https://maker.ifttt.com/use/', ''));
+        if (args.value.replace('https://maker.ifttt.com/use/', '') != '') {
+            ifttt = new iftt_webhooks.IFTTT(args.value.replace('https://maker.ifttt.com/use/', ''))
+            ifttt.trigger('eval', { "value1": "Notification test" })
+        }
+    } else {
+        store.set(args.name, args.value);
+    }
 });
 
 function parseString(str) {
