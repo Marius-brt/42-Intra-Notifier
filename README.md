@@ -33,6 +33,10 @@ Go to [release](https://github.com/Marius-brt/42-Intra-Notifier/releases) and ch
 
 You have to unzip the file then open Intra Notifier (in your download folder normally). Enter your Intra username and password then click on Login. You can minimize the application but do not click on the red cross. When you want to stop receiving notifications, just click close the app.
 
+## How to add mobile notification ?
+
+Mobile notifications are available in version 2.3.0 of Intra Notifier. They are a bit tricky to set up but you can follow this [tutorial](https://github.com/Marius-brt/42-Intra-Notifier/blob/2.0/mobile-notif.md).
+
 ## How it's working ?
 
 In order to finish the project quickly, I decided to use [Electron](https://github.com/electron/electron) for its simplicity. For the scrapping I use [Puppeteer](https://github.com/puppeteer/puppeteer). It connects to your 42 account and get the auth cookies. Then, it makes HTTP requests with your cookies every 60 seconds to retrieve your data from the Intra using [Axios](https://github.com/axios/axios)(your cookies are not sent to us obviously). Then I use [Cheerio](https://github.com/cheeriojs/cheerio) to get the ratings in the html of the page. The username and password are stored locally on the computer using [Electron Store](https://github.com/sindresorhus/electron-store) (password is encrypted).
