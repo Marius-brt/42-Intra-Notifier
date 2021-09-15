@@ -350,8 +350,7 @@ h3 {
 .card p,
 .card h2 {
     z-index: 2;
-    color: #fff;
-    mix-blend-mode: difference;
+    color: var(--color);
 }
 
 .card .bg {
