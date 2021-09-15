@@ -35,6 +35,9 @@
     .card:nth-of-type(3) .bg {
         background: linear-gradient(20deg, rgba(255, 0, 191, 0) 20%, rgba(255, 0, 191, 0.4) 100%);
     }
+    .bar {
+        background: linear-gradient(90deg, rgba(107, 112, 250, 0) 0%, rgba(107, 112, 250, 0.3) 100%);
+    }
 }
 
 @media (prefers-color-scheme: light) {
@@ -72,6 +75,9 @@
     }
     .nav-left img {
         filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(116deg) brightness(91%) contrast(103%);
+    }
+    .bar {
+        background: linear-gradient(90deg, rgba(141, 250, 107, 0.5) 0%, rgba(141, 250, 107, 0.8) 100%);
     }
 }
 
@@ -171,10 +177,10 @@ h3 {
     width: 95%;
     box-sizing: border-box;
     padding: 0 15px;
-    box-shadow: 0px 0px 50px -3px rgba(0, 0, 0, 0.1);
 }
 
 .bar-container .bar-bg {
+    box-shadow: 0px 0px 50px -3px rgba(0, 0, 0, 0.1);
     position: relative;
     display: flex;
     justify-content: center;
@@ -190,7 +196,6 @@ h3 {
     z-index: 1;
     position: absolute;
     left: 0;
-    background: rgb(141, 250, 107);
     height: 100%;
 }
 

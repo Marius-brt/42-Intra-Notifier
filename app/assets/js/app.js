@@ -88,9 +88,7 @@ ipcRenderer.on("version", (event, data) => {
                 parseInt(version.replace(/\./g, "")) > parseInt(data.replace(/\./g, ""))
             ) {
                 $("#update-popup").show();
-                $("#popup-text").text(
-                    `Ahah it looks like there is a new version (we know you love updates 😅). You are currently on version ${data}. The latest version is ${version}`
-                );
+                $("#popup-text").text(`Ahah it looks like there is a new version (we know you love updates 😅). You are currently on version ${data}. The latest version is ${version}`);
                 $("#version-text p").text("New version available!");
                 $("#version-text").append(
                     `<button style="margin-top: 15px;" onclick='require("electron").shell.openExternal("https://github.com/Marius-brt/42-Intra-Notifier/releases")'>Download last version</button>`
@@ -111,13 +109,18 @@ ipcRenderer.on("settings", (event, data) => {
     $("#notif-sound").prop("checked", data.notif_sound);
 });
 
+function getLastSunday() {
+    var today = new Date()
+    var t = new Date(today.setDate(today.getDate() - today.getDay()));
+    t.setHours(0)
+    t.setMinutes(0)
+    t.setSeconds(0)
+    return t;
+}
+
 ipcRenderer.on("user_data", (event, data) => {
     var hours = 0
-    var prevMonday = new Date();
-    prevMonday.setDate(prevMonday.getDate() - (prevMonday.getDay() + 6) % 7);
-    prevMonday.setHours(0)
-    prevMonday.setMinutes(0)
-    prevMonday.setSeconds(0)
+    var prevMonday = getLastSunday();
     for (const [key, value] of Object.entries(data.logtimes)) {
         var date = new Date(key)
         if (date.getTime() >= prevMonday.getTime()) {
@@ -125,8 +128,10 @@ ipcRenderer.on("user_data", (event, data) => {
             hours += parseInt(h[0]) + (parseInt(h[1]) / 60)
         }
     }
-    $('#logtime-text').text(`${(hours * 100) / 50}% (${hours}h/50h)`)
-    $("#bar").css("width", `${((hours * 100) / 50) > 100 ? '100' : (hours * 100) / 50}%`);
+    hours = (Math.round(hours * 100) / 100).toFixed(1);
+    var percent = (Math.round((hours * 100) / 50 * 100) / 100).toFixed(1);
+    $('#logtime-text').text(`${percent}% (${hours}h/50h)`)
+    $("#bar").css("width", `${percent > 100 ? '100' : percent}%`);
     var evals = Object.values(data.evaluations);
     $("#evaluations").empty();
 
