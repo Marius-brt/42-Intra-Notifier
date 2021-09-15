@@ -142,8 +142,9 @@ async function getUserData() {
                 .find(".project-item-text")
                 .text()
                 .replace(/<\/?[^>]+(>|$)/g, " ")
-                .replace(/[^\x20-\x7E]/g, "")
-                .replace(/\s\s+/g, " ");
+                .replace(/[^\x20-\x7E]/g, " ")
+                .replace(/\s\s+/g, " ")
+                .trim()
             var html = "";
             if (text.startsWith("You will evaluate")) {
                 if (text.includes("someone")) {
@@ -154,6 +155,11 @@ async function getUserData() {
                     spl2[0] = `evaluate <span class="evaluator" onclick='ipcRenderer.send("open", "https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span> `;
                     html = spl1[0] + spl2[0] + spl2[1];
                 }
+            } else if (text.startsWith("You are ready to evaluate")) {
+                var spl1 = text.split("evaluate ");
+                var spl2 = splitOnce(spl1[1], " ");
+                spl2[0] = `evaluate <span class="evaluator" onclick='ipcRenderer.send("open", "https://profile.intra.42.fr/users/${spl2[0]}")'>${spl2[0]}</span> `;
+                html = spl1[0] + spl2[0] + spl2[1];
             } else {
                 if (text.includes("by ")) {
                     var spl1 = text.split("by ");
@@ -271,6 +277,8 @@ async function checkNotif(evals) {
                     "style"
                 );
             }
+            evaluations[el.id].html = el.html
+            evaluations[el.id].text = el.text
         }
     }
     for (const [key, value] of Object.entries(evaluations)) {
