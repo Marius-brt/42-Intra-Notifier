@@ -2,8 +2,8 @@
 
 1. First you need to create an [IFTTT](https://ifttt.com/home) account.
 2. Click on CREATE button.
-3. In "If this" choose "Webhook", then "Receive a web request". For the event name write "eval" and click on Create.
-4. In "Then that" choose "Notifications", then "Send a notification from the IFTTT app". In the Message text box write "{{Value1}}" then click on Create
+3. In "If this" choose "Webhook", then "Receive a web request". For the event name write ``eval`` and click on Create.
+4. In "Then that" choose "Notifications", then "Send a notification from the IFTTT app". In the Message text box write ``{{Value1}}`` then click on Create
 5. Click on Continue then Finish
 6. Open the Intra Notifier settings, enable mobile notifications
 7. Then open this [link](https://ifttt.com/maker_webhooks/settings), copy the URL value below Connected As and enter it in Master Key in Intra Notifier
