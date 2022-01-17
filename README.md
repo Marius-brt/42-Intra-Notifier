@@ -8,6 +8,8 @@
 	<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/Marius-brt/42-intra-notifier?style=flat-square">
 </p>
 
+> I see that Intra Notifier continues to be downloaded when I'm not even at 42 anymore 😅. The software still works? If it's possible to get some feedback it would be cool 👍. 
+
 # Intra Notifier
 
 Intra Notifier is a software that allows you to be notified when you have a new evaluation and also to have a reminder 15 minutes and 4 minutes before it.
